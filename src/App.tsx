@@ -424,7 +424,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-bg flex flex-col font-sans">
       {/* Header */}
-      <header className="h-16 bg-surface border-b border-border px-8 flex items-center justify-between sticky top-0 z-50">
+      <header className="h-16 bg-surface border-b border-border px-8 flex items-center justify-between sticky top-0 z-50 print:hidden">
         <div className="flex items-center gap-8">
           <div className="font-extrabold text-xl text-primary tracking-tighter uppercase">ESCALA WEB FREE</div>
           <div className="h-4 w-px bg-border hidden lg:block"></div>
@@ -455,7 +455,7 @@ export default function App() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <nav className="w-72 bg-surface border-r border-border p-8 flex flex-col gap-10">
+        <nav className="w-72 bg-surface border-r border-border p-8 flex flex-col gap-10 print:hidden">
           <div className="flex flex-col items-center gap-4 mb-4">
             {config.logoImg ? (
               <img 
