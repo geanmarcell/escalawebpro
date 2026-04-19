@@ -795,7 +795,16 @@ function GerenciarView({
                   <td className="px-6 py-5 text-sm font-medium text-text">{emp.cracha}</td>
                   <td className="px-6 py-5 text-sm font-bold text-primary">
                     <button 
-                      onClick={() => setContactModalEmployee(emp)}
+                      onClick={() => {
+                        const hasPhone = emp.telefone && emp.telefone.trim() !== "";
+                        const hasEmail = emp.email && emp.email.trim() !== "";
+                        
+                        if (!hasPhone && !hasEmail) {
+                          alert(`O colaborador ${emp.nome} não possui telefone ou e-mail cadastrados.`);
+                          return;
+                        }
+                        setContactModalEmployee(emp);
+                      }}
                       className="hover:underline text-left"
                       title="Clique para contatos"
                     >
@@ -917,13 +926,21 @@ function GerenciarView({
                 <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest px-2">Canais Disponíveis</p>
                 
                 <a 
-                  href={`https://wa.me/${contactModalEmployee.telefone.replace(/\D/g, '')}`}
+                  href={`https://wa.me/${(contactModalEmployee.telefone || '').replace(/\D/g, '')}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full flex items-center justify-between p-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl transition-all border border-emerald-100 group shadow-sm shadow-emerald-500/5 active:scale-[0.98]"
+                  className={cn(
+                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all border group shadow-sm active:scale-[0.98]",
+                    contactModalEmployee.telefone 
+                      ? "bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-100 shadow-emerald-500/5" 
+                      : "bg-slate-50 text-slate-400 border-slate-100 opacity-60 cursor-not-allowed pointer-events-none"
+                  )}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                    <div className={cn(
+                      "w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-transform",
+                      contactModalEmployee.telefone ? "bg-emerald-500 text-white shadow-emerald-500/20 group-hover:scale-110" : "bg-slate-300 text-white shadow-none"
+                    )}>
                       <MessageCircle className="w-5 h-5" />
                     </div>
                     <div>
@@ -935,11 +952,19 @@ function GerenciarView({
                 </a>
 
                 <a 
-                  href={`mailto:${contactModalEmployee.email}`}
-                  className="w-full flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-2xl transition-all border border-blue-100 group shadow-sm shadow-blue-500/5 active:scale-[0.98]"
+                  href={contactModalEmployee.email ? `mailto:${contactModalEmployee.email}` : '#'}
+                  className={cn(
+                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all border group shadow-sm active:scale-[0.98]",
+                    contactModalEmployee.email
+                      ? "bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-100 shadow-blue-500/5"
+                      : "bg-slate-50 text-slate-400 border-slate-100 opacity-60 cursor-not-allowed pointer-events-none"
+                  )}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                    <div className={cn(
+                      "w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-transform",
+                      contactModalEmployee.email ? "bg-blue-600 text-white shadow-blue-500/20 group-hover:scale-110" : "bg-slate-300 text-white shadow-none"
+                    )}>
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
@@ -1006,7 +1031,7 @@ function GerenciarView({
       {/* Modal Form */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1018,263 +1043,279 @@ function GerenciarView({
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="relative bg-surface w-full max-w-xl rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[95vh]"
+              className="relative bg-surface w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[95vh] border border-border"
             >
-              <div className="p-5 border-b border-border bg-surface flex items-center justify-between">
-                <h2 className="text-lg font-bold text-text">
-                  {modalMode === 'add' ? 'Cadastrar Funcionário' : 
-                   modalMode === 'edit' ? 'Editar Funcionário' : 'Visualizar Funcionário'}
-                </h2>
+              <div className="p-6 border-b border-border bg-surface flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center shadow-sm">
+                    {modalMode === 'add' ? <Plus className="w-5 h-5" /> : modalMode === 'edit' ? <Pencil className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </div>
+                  <h2 className="text-xl font-black text-text tracking-tight uppercase">
+                    {modalMode === 'add' ? 'Cadastrar Funcionário' : 
+                     modalMode === 'edit' ? 'Editar Funcionário' : 'Visualizar Funcionário'}
+                  </h2>
+                </div>
+                <button 
+                  onClick={() => setIsModalOpen(false)}
+                  className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-secondary"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
-              <div className="p-6 overflow-y-auto space-y-4">
-                <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Crachá:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="text" 
-                      value={formState.cracha}
-                      onChange={(e) => setFormState({...formState, cracha: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Nome:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="text" 
-                      value={formState.nome}
-                      onChange={(e) => setFormState({...formState, nome: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
+              <div className="p-8 overflow-y-auto space-y-8 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+                <div className="space-y-6">
+                  <h3 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Informações Pessoais</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div className="space-y-1.5 text-center md:text-left md:col-span-2">
+                       <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block mb-2">Foto de Perfil:</label>
+                       <div className="flex flex-col md:flex-row items-center gap-6 p-4 bg-bg rounded-xl border border-border">
+                          {formState.fotoUrl ? (
+                            <img src={formState.fotoUrl} alt="Preview" className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md" referrerPolicy="no-referrer" />
+                          ) : (
+                            <div className="w-20 h-20 bg-primary/5 text-primary rounded-full flex items-center justify-center border-2 border-dashed border-primary/20">
+                              <UserIcon className="w-8 h-8" />
+                            </div>
+                          )}
+                          {modalMode !== 'view' && (
+                            <div className="flex-1 space-y-2 text-left">
+                              <input 
+                                type="file" 
+                                accept="image/*"
+                                onChange={handlePhotoUpload}
+                                className="text-[10px] text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-primary file:text-white hover:file:bg-primary/90 transition-all w-full md:w-fit"
+                              />
+                              <p className="text-[9px] text-secondary/60">Formatos aceitos: JPG, PNG. Tamanho máx: 2MB.</p>
+                            </div>
+                          )}
+                       </div>
+                    </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Função:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="text" 
-                      value={formState.funcao}
-                      onChange={(e) => setFormState({...formState, funcao: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Setor:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="text" 
-                      value={formState.setor}
-                      onChange={(e) => setFormState({...formState, setor: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Admissão:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="date" 
-                      value={formState.admissao}
-                      onChange={(e) => setFormState({...formState, admissao: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Primeira Folga Semanal:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="date" 
-                      value={formState.folgaSemanal}
-                      onChange={(e) => setFormState({...formState, folgaSemanal: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Primeira Folga de Domingo:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="date" 
-                      value={formState.folgaDomingo}
-                      onChange={(e) => setFormState({...formState, folgaDomingo: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Turno:</label>
-                    <select 
-                      disabled={modalMode === 'view'}
-                      value={formState.turno}
-                      onChange={(e) => setFormState({...formState, turno: e.target.value as any})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    >
-                      <option value="Manhã">Manhã</option>
-                      <option value="Tarde">Tarde</option>
-                      <option value="Noite">Noite</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Data de Férias:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="date" 
-                      value={formState.ferias || ''}
-                      onChange={(e) => setFormState({...formState, ferias: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Dias de Férias:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="text" 
-                      value={formState.diasFerias}
-                      onChange={(e) => setFormState({...formState, diasFerias: Number(e.target.value) || 0})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Data de Nascimento:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="date" 
-                      value={formState.nascimento || ''}
-                      onChange={(e) => setFormState({...formState, nascimento: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Horário de Entrada:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="time" 
-                      value={formState.horaEntrada}
-                      onChange={(e) => setFormState({...formState, horaEntrada: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Horário de Saída:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="time" 
-                      value={formState.horaSaida}
-                      onChange={(e) => setFormState({...formState, horaSaida: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Tipo de Escala:</label>
-                    <select 
-                      disabled={modalMode === 'view'}
-                      value={formState.tipoEscala}
-                      onChange={(e) => setFormState({...formState, tipoEscala: e.target.value as any})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    >
-                      <option value="">Selecione</option>
-                      <option value="6x1">6x1</option>
-                      <option value="12x36">12x36</option>
-                      <option value="5x2">5x2</option>
-                      <option value="4x2">4x2</option>
-                      <option value="4x3">4x3</option>
-                      <option value="12x24">12x24</option>
-                      <option value="6x2">6x2</option>
-                      <option value="24x72">24x72</option>
-                      <option value="3x3">3x3</option>
-                      <option value="2x2">2x2</option>
-                      <option value="5x1">5x1</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Início da Licença:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="date" 
-                      value={formState.licencaInicio || ''}
-                      onChange={(e) => setFormState({...formState, licencaInicio: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Término da Licença:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="date" 
-                      value={formState.licencaFim || ''}
-                      onChange={(e) => setFormState({...formState, licencaFim: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">Telefone:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="text" 
-                      value={formState.telefone || ''}
-                      onChange={(e) => setFormState({...formState, telefone: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                      placeholder="(00) 00000-0000"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="text-xs font-bold text-text">E-mail:</label>
-                    <input 
-                      disabled={modalMode === 'view'}
-                      type="email" 
-                      value={formState.email || ''}
-                      onChange={(e) => setFormState({...formState, email: e.target.value})}
-                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
-                      placeholder="exemplo@email.com"
-                    />
-                  </div>
-                  <div className="space-y-1 col-span-2">
-                    <label className="text-xs font-bold text-text">Foto do Funcionário:</label>
-                    <div className="flex items-center gap-4 border border-slate-300 rounded-md p-2">
-                       {formState.fotoUrl && (
-                        <img src={formState.fotoUrl} alt="Preview" className="w-16 h-16 rounded-full object-cover border-2 border-primary" referrerPolicy="no-referrer" />
-                      )}
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Crachá:</label>
                       <input 
                         disabled={modalMode === 'view'}
-                        type="file" 
-                        accept="image/*"
-                        onChange={handlePhotoUpload}
-                        className="text-xs text-secondary file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-primary file:text-white hover:file:bg-primary-hover transition-all w-full"
+                        type="text" 
+                        value={formState.cracha}
+                        onChange={(e) => setFormState({...formState, cracha: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-60"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Nome Completo:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="text" 
+                        value={formState.nome}
+                        onChange={(e) => setFormState({...formState, nome: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-60"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Função:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="text" 
+                        value={formState.funcao}
+                        onChange={(e) => setFormState({...formState, funcao: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-60"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Setor:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="text" 
+                        value={formState.setor}
+                        onChange={(e) => setFormState({...formState, setor: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-60"
                       />
                     </div>
                   </div>
                 </div>
 
-                {modalMode === 'view' ? (
-                  <div className="flex justify-end pt-4">
-                    <button 
-                      onClick={() => setIsModalOpen(false)}
-                      className="bg-primary hover:bg-primary-hover text-white font-bold py-1.5 px-8 rounded-lg text-sm transition-colors"
-                    >
-                      Fechar
-                    </button>
+                <div className="space-y-6">
+                  <h3 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Contrato & Escala</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Data de Admissão:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="date" 
+                        value={formState.admissao}
+                        onChange={(e) => setFormState({...formState, admissao: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Primeira Folga Semanal:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="date" 
+                        value={formState.folgaSemanal}
+                        onChange={(e) => setFormState({...formState, folgaSemanal: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Primeira Folga de Domingo:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="date" 
+                        value={formState.folgaDomingo}
+                        onChange={(e) => setFormState({...formState, folgaDomingo: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Turno:</label>
+                      <select 
+                        disabled={modalMode === 'view'}
+                        value={formState.turno}
+                        onChange={(e) => setFormState({...formState, turno: e.target.value as any})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none"
+                      >
+                        <option value="Manhã">Manhã</option>
+                        <option value="Tarde">Tarde</option>
+                        <option value="Noite">Noite</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Data de Férias:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="date" 
+                        value={formState.ferias || ''}
+                        onChange={(e) => setFormState({...formState, ferias: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Dias de Férias:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="number" 
+                        value={formState.diasFerias}
+                        onChange={(e) => setFormState({...formState, diasFerias: Number(e.target.value) || 0})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Data de Nascimento:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="date" 
+                        value={formState.nascimento || ''}
+                        onChange={(e) => setFormState({...formState, nascimento: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Tipo de Escala:</label>
+                      <select 
+                        disabled={modalMode === 'view'}
+                        value={formState.tipoEscala}
+                        onChange={(e) => setFormState({...formState, tipoEscala: e.target.value as any})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all appearance-none"
+                      >
+                        <option value="">Selecione...</option>
+                        {['6x1', '12x36', '5x2', '4x2', '4x3', '12x24', '6x2', '24x72', '3x3', '2x2', '5x1'].map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Horário de Entrada:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="time" 
+                        value={formState.horaEntrada}
+                        onChange={(e) => setFormState({...formState, horaEntrada: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Horário de Saída:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="time" 
+                        value={formState.horaSaida}
+                        onChange={(e) => setFormState({...formState, horaSaida: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
                   </div>
-                ) : (
-                  <div className="flex justify-end gap-3 pt-4">
-                    <button 
-                      onClick={handleSave}
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-1.5 px-6 rounded-lg text-sm transition-colors"
-                    >
-                      Salvar
-                    </button>
-                    <button 
-                      onClick={() => setIsModalOpen(false)}
-                      className="bg-[#6c757d] hover:bg-[#5a6268] text-white font-bold py-1.5 px-6 rounded-lg text-sm transition-colors"
-                    >
-                      Cancelar
-                    </button>
+                </div>
+
+                <div className="space-y-6">
+                  <h3 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Contato & Licença</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Telefone:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="text" 
+                        value={formState.telefone || ''}
+                        onChange={(e) => setFormState({...formState, telefone: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        placeholder="(00) 00000-0000"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">E-mail:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="email" 
+                        value={formState.email || ''}
+                        onChange={(e) => setFormState({...formState, email: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        placeholder="exemplo@email.com"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Início da Licença:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="date" 
+                        value={formState.licencaInicio || ''}
+                        onChange={(e) => setFormState({...formState, licencaInicio: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Término da Licença:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="date" 
+                        value={formState.licencaFim || ''}
+                        onChange={(e) => setFormState({...formState, licencaFim: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                      />
+                    </div>
                   </div>
+                </div>
+              </div>
+
+              <div className="p-8 border-t border-border flex items-center justify-end gap-3 bg-slate-50/50">
+                <button 
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-6 py-2.5 bg-white border border-border text-secondary font-bold rounded-xl text-xs hover:bg-slate-50 transition-all uppercase tracking-widest"
+                >
+                  {modalMode === 'view' ? 'Fechar' : 'Cancelar'}
+                </button>
+                {modalMode !== 'view' && (
+                  <button 
+                    onClick={handleSave}
+                    className="px-8 py-2.5 bg-primary hover:bg-primary/90 text-white font-black rounded-xl text-xs transition-all shadow-lg shadow-primary/20 uppercase tracking-widest"
+                  >
+                    {modalMode === 'add' ? 'Salvar Novo' : 'Salvar Alterações'}
+                  </button>
                 )}
               </div>
             </motion.div>
