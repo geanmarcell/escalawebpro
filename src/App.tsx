@@ -50,6 +50,12 @@ import {
 import { ptBR } from 'date-fns/locale';
 
 // --- HELPERS ---
+const parseLocal = (s: string) => {
+  if (!s) return new Date();
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+
 function getEaster(year: number) {
   const f = Math.floor,
     G = year % 19,
@@ -112,11 +118,6 @@ function getVacationInfo(employee: Employee) {
   if (!employee.admissao) {
     return { status: 'Em dia', diasVencido: 0, color: 'bg-emerald-100 text-emerald-800' };
   }
-
-  const parseLocal = (s: string) => {
-    const [y, m, d] = s.split('-').map(Number);
-    return new Date(y, m - 1, d);
-  };
 
   const admissionDate = parseLocal(employee.admissao);
   let lastVacationDate: Date | null = null;
@@ -192,7 +193,7 @@ function isEmployeeOff(employee: Employee, date: Date, holidays: Holiday[] = [])
       return { isOff: true, isSundayAlert: true, isHoliday, isVacation, isLeave };
     }
     // Se não for folga mas for domingo, marcamos como alerta para indicar que é domingo de trabalho
-    return { isOff: false, isSundayAlert: true, isHoliday, isVacation, isLeave };
+    return { isOff: isVacation || isLeave, isSundayAlert: true, isHoliday, isVacation, isLeave };
   }
 
   // Lógica padrão baseada na escala e na data de referência (Folga Semanal ou Admissão)
@@ -201,38 +202,38 @@ function isEmployeeOff(employee: Employee, date: Date, holidays: Holiday[] = [])
   const diffDays = differenceInDays(date, refDate);
 
   // Se a data solicitada for anterior à referência, não calculamos corretamente
-  if (diffDays < 0) return { isOff: false, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+  if (diffDays < 0) return { isOff: isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
 
   switch (employee.tipoEscala) {
     case '6x1': {
       const offDayOfWeek = getDay(refDate);
-      return { isOff: dayOfWeek === offDayOfWeek, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: (dayOfWeek === offDayOfWeek) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     }
     case '12x36':
-      return { isOff: diffDays % 2 !== 0, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: (diffDays % 2 !== 0) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     case '5x2': {
       const offDay1 = getDay(refDate);
       const offDay2 = (offDay1 + 1) % 7;
-      return { isOff: dayOfWeek === offDay1 || dayOfWeek === offDay2, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: (dayOfWeek === offDay1 || dayOfWeek === offDay2) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     }
     case '4x2':
-      return { isOff: (diffDays % 6) >= 4, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: ((diffDays % 6) >= 4) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     case '4x3':
-      return { isOff: (diffDays % 7) >= 4, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: ((diffDays % 7) >= 4) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     case '12x24':
-      return { isOff: diffDays % 2 !== 0, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: (diffDays % 2 !== 0) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     case '6x2':
-      return { isOff: (diffDays % 8) >= 6, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: ((diffDays % 8) >= 6) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     case '24x72':
-      return { isOff: (diffDays % 4) !== 0, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: ((diffDays % 4) !== 0) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     case '3x3':
-      return { isOff: (diffDays % 6) >= 3, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: ((diffDays % 6) >= 3) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     case '2x2':
-      return { isOff: (diffDays % 4) >= 2, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: ((diffDays % 4) >= 2) || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     case '5x1':
-      return { isOff: (diffDays % 6) === 5, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: (diffDays % 6) === 5 || isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
     default:
-      return { isOff: false, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
+      return { isOff: isVacation || isLeave, isSundayAlert: dayOfWeek === 0, isHoliday, isVacation, isLeave };
   }
 }
 
@@ -507,14 +508,11 @@ export default function App() {
               />
           </div>
 
-          <div className="mt-auto">
-             <div className="metric-card bg-surface">
-                <div className="metric-label text-[10px] uppercase tracking-widest font-bold mb-1">Performance</div>
-                <div className="metric-value text-xl font-black">94%</div>
-                <div className="w-full bg-border h-1 rounded-full mt-3 overflow-hidden">
-                   <div className="bg-accent h-full w-[94%]"></div>
-                </div>
-             </div>
+          <div className="mt-auto pt-8 border-t border-border flex justify-center">
+             <p className="text-sm font-bold text-secondary uppercase tracking-tight text-center leading-tight">
+               Criado por Gean Marcell<br/>
+               em 05/2025
+             </p>
           </div>
         </nav>
 
@@ -530,7 +528,7 @@ export default function App() {
             >
               {activeView === 'gerenciar' && <GerenciarView employees={employees} setEmployees={setEmployees} />}
               {activeView === 'escala' && <EscalaMensalView employees={employees} config={config} />}
-              {activeView === 'escalaSemanal' && <EscalaSemanalView employees={employees} holidays={config.feriados} />}
+              {activeView === 'escalaSemanal' && <EscalaSemanalView employees={employees} holidays={config.feriados} config={config} />}
               {activeView === 'configuracao' && (
                 <ConfiguracaoView 
                   employees={employees} 
@@ -566,17 +564,18 @@ function NavItem({ active, onClick, icon: Icon, label }: { active: boolean, onCl
     <button 
       onClick={onClick}
       className={cn(
-        "w-full flex items-center justify-between gap-3 px-4 py-3 rounded-md transition-all group",
-        active 
-          ? "bg-primary/10 text-primary border-l-4 border-primary" 
-          : "text-secondary hover:bg-slate-50 hover:text-text"
+        "nav-item-base w-full",
+        active ? "nav-item-active" : "nav-item-inactive"
       )}
     >
-      <div className="flex items-center gap-3">
-        <Icon className={cn("w-4 h-4", active ? "text-primary" : "text-secondary")} />
-        <span className="text-sm font-bold tracking-tight">{label}</span>
-      </div>
-      {active && <ChevronRight className="w-4 h-4" />}
+      <Icon className={cn("w-5 h-5 transition-transform duration-300", active ? "scale-110" : "group-hover:scale-110")} />
+      <span>{label}</span>
+      {active && (
+        <motion.div 
+          layoutId="nav-glow"
+          className="absolute right-[-20px] w-10 h-10 bg-white/20 blur-xl rounded-full"
+        />
+      )}
     </button>
   );
 }
@@ -1222,79 +1221,345 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
   );
 }
 
-function EscalaSemanalView({ employees, holidays: customHolidays = [] }: { employees: Employee[], holidays?: Holiday[] }) {
-  const weekDays = [
-    { name: 'Segunda', id: 'seg', offset: 0 },
-    { name: 'Terça', id: 'ter', offset: 1 },
-    { name: 'Quarta', id: 'qua', offset: 2 },
-    { name: 'Quinta', id: 'qui', offset: 3 },
-    { name: 'Sexta', id: 'sex', offset: 4 },
-    { name: 'Sábado', id: 'sab', offset: 5 },
-    { name: 'Domingo', id: 'dom', offset: 6 }
-  ];
+function EscalaSemanalView({ employees, holidays: customHolidays = [], config }: { employees: Employee[], holidays?: Holiday[], config: AppConfig }) {
+  const [selectedSetor, setSelectedSetor] = useState('Todos');
+  const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
+  const [params, setParams] = useState({ sector: 'Todos', date: new Date() });
+  const [isEditMode, setIsEditMode] = useState(false);
   
-  const today = new Date();
-  const startOfThisWeek = addDays(today, -((getDay(today) + 6) % 7)); 
+  // Storage for manual overrides: { [dateKey]: { [employeeId]: { type: string, time: string } } }
+  const [weeklyOverrides, setWeeklyOverrides] = useState<Record<string, Record<number, { type?: string, time?: string }>>>(() => {
+    const saved = localStorage.getItem('escala_semanal_overrides');
+    return saved ? JSON.parse(saved) : {};
+  });
 
-  // Combinar feriados automáticos dos anos presentes na semana atual
+  const [offTypeModal, setOffTypeModal] = useState<{ dateKey: string, employeeId: number } | null>(null);
+  const [timeEditorModal, setTimeEditorModal] = useState<{ dateKey: string, employeeId: number, currentTime: string } | null>(null);
+  const [tempTime, setTempTime] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('escala_semanal_overrides', JSON.stringify(weeklyOverrides));
+  }, [weeklyOverrides]);
+
+  const sectors = ['Todos', ...Array.from(new Set(employees.map(e => e.setor)))];
+
+  const handleGerarEscala = () => {
+    setParams({
+      sector: selectedSetor,
+      date: parseLocal(selectedDate)
+    });
+  };
+
+  const handlePrint = () => {
+    alert("Para uma impressão perfeita, certifique-se de que o sistema está aberto em uma nova aba e não dentro do ambiente de pré-visualização. Clique no ícone de 'Nova Aba' no canto superior direito antes de imprimir.");
+    window.print();
+  };
+
+  const toggleEditMode = () => setIsEditMode(!isEditMode);
+
+  // Find the exact Monday of the week containing params.date
+  const dayOfWeek = getDay(params.date); // 0 (Sun) to 6 (Sat)
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const startOfThisWeek = addDays(params.date, diffToMonday);
+
+  const shiftPriority: Record<string, number> = { 'Manhã': 1, 'Tarde': 2, 'Noite': 3 };
+  const displayedEmployees = employees
+    .filter(e => params.sector === 'Todos' || e.setor === params.sector)
+    .sort((a, b) => (shiftPriority[a.turno] || 99) - (shiftPriority[b.turno] || 99));
+
+  const weekDays = [
+    { label: 'seg', offset: 0 },
+    { label: 'ter', offset: 1 },
+    { label: 'qua', offset: 2 },
+    { label: 'qui', offset: 3 },
+    { label: 'sex', offset: 4 },
+    { label: 'sáb', offset: 5 },
+    { label: 'dom', offset: 6 }
+  ];
+
   const yearsInWeek = Array.from(new Set([startOfThisWeek.getFullYear(), addDays(startOfThisWeek, 6).getFullYear()]));
   const allHolidays = yearsInWeek.flatMap(y => getAllHolidaysForYear(y, customHolidays));
 
-  return (
-    <div className="space-y-10">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="section-label mb-1">Status Operacional</h3>
-          <h1 className="text-3xl font-black text-text tracking-tighter">Janela Semanal</h1>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-px bg-border border border-border rounded-lg overflow-hidden shadow-xl">
-        {weekDays.map((day) => {
-          const date = addDays(startOfThisWeek, day.offset);
-          const isHoliday = allHolidays.some(h => isSameDay(parseISO(h.data), date));
-          const holidayName = allHolidays.find(h => isSameDay(parseISO(h.data), date))?.descricao;
+  const handleSetTime = (dateKey: string, employeeId: number, currentTime: string) => {
+    setTempTime(currentTime);
+    setTimeEditorModal({ dateKey, employeeId, currentTime });
+  };
 
-          return (
-            <div key={day.id} className="bg-surface flex flex-col min-h-[500px]">
-              <div className={cn(
-                "p-6 border-b border-border flex flex-col items-center justify-center gap-1",
-                isHoliday ? "bg-primary/5" : day.id === 'dom' ? "bg-warning/5" : "bg-bg/50"
-              )}>
-                <span className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em]">{day.name}</span>
-                <span className={cn(
-                  "text-2xl font-black tabular-nums",
-                  isHoliday ? "text-primary" : day.id === 'dom' ? "text-warning" : "text-text"
-                )}>{format(date, 'dd')}</span>
-                {isHoliday && (
-                  <span className="text-[8px] font-bold text-primary uppercase text-center mt-1 truncate w-full px-2">
-                    {holidayName}
-                  </span>
-                )}
+  const saveTimeOverride = () => {
+    if (timeEditorModal) {
+      setWeeklyOverrides(prev => ({
+        ...prev,
+        [timeEditorModal.dateKey]: {
+          ...(prev[timeEditorModal.dateKey] || {}),
+          [timeEditorModal.employeeId]: {
+            ...(prev[timeEditorModal.dateKey]?.[timeEditorModal.employeeId] || {}),
+            time: tempTime
+          }
+        }
+      }));
+      setTimeEditorModal(null);
+    }
+  };
+
+  const handleSetOffType = (dateKey: string, employeeId: number, type: string) => {
+    setWeeklyOverrides(prev => ({
+      ...prev,
+      [dateKey]: {
+        ...(prev[dateKey] || {}),
+        [employeeId]: {
+          ...(prev[dateKey]?.[employeeId] || {}),
+          type: type
+        }
+      }
+    }));
+    setOffTypeModal(null);
+  };
+
+  const clearOverride = (dateKey: string, employeeId: number) => {
+    setWeeklyOverrides(prev => {
+      const dayOverrides = { ...(prev[dateKey] || {}) };
+      delete dayOverrides[employeeId];
+      return {
+        ...prev,
+        [dateKey]: dayOverrides
+      };
+    });
+  };
+
+  return (
+    <div className="space-y-6 print:space-y-0 print:p-0 relative">
+      {/* Off Type Modal */}
+      {offTypeModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#1f2937] border border-slate-700 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden"
+          >
+            <div className="p-6">
+              <h2 className="text-white font-bold mb-4">Selecione o tipo de folga:</h2>
+              <div className="space-y-1">
+                {[
+                  { id: 'FF', label: '1 - FF' },
+                  { id: 'FC', label: '2 - FC' },
+                  { id: 'BH', label: '3 - BH' },
+                  { id: 'FOLGA', label: '4 - FOLGA' },
+                  { id: 'TREINAMENTO', label: '5 - TREINAMENTO' },
+                  { id: 'ATESTADO', label: '6 - ATESTADO' }
+                ].map(opt => (
+                  <button 
+                    key={opt.id}
+                    onClick={() => handleSetOffType(offTypeModal.dateKey, offTypeModal.employeeId, opt.id)}
+                    className="w-full text-left px-4 py-2 hover:bg-slate-700 text-slate-200 rounded text-sm transition-colors"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
               </div>
-              
-              <div className="flex-1 p-5 space-y-4">
-                {employees.map(e => {
-                  const { isOff } = isEmployeeOff(e, date, allHolidays);
-                  if (isOff) return null;
-                  return (
-                    <div key={e.id} className="metric-card bg-surface hover:border-primary transition-all cursor-pointer">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-[9px] font-black text-primary border border-primary/20 px-2 py-0.5 rounded uppercase tracking-tighter">{e.turno}</span>
-                        <span className="text-[9px] font-mono font-bold text-secondary">{e.horaEntrada}</span>
-                      </div>
-                      <p className="text-xs font-black text-text truncate">{e.nome}</p>
-                      <div className="mt-3 pt-3 border-t border-border flex items-center justify-between font-mono text-[9px] text-secondary">
-                         <span>S: {e.setor}</span>
-                         <ChevronRight className="w-3 h-3 text-border" />
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="mt-6 flex justify-end gap-3">
+                 <button 
+                  onClick={() => setOffTypeModal(null)}
+                  className="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-md text-sm font-bold transition-all"
+                >
+                  Cancelar
+                </button>
               </div>
             </div>
-          );
-        })}
+          </motion.div>
+        </div>
+      )}
+
+      {/* Time Editor Modal */}
+      {timeEditorModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#1f2937] border border-slate-700 rounded-xl shadow-2xl w-full max-w-sm overflow-hidden"
+          >
+            <div className="p-6">
+              <label className="text-white font-bold block mb-4">Digite o novo horário (HH:MM):</label>
+              <input 
+                autoFocus
+                type="text"
+                value={tempTime}
+                onChange={(e) => setTempTime(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && saveTimeOverride()}
+                className="w-full bg-[#374151] border border-slate-600 rounded-md px-4 py-2 text-white font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 mb-6"
+              />
+              <div className="flex justify-end gap-3">
+                 <button 
+                  onClick={saveTimeOverride}
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-bold transition-all"
+                >
+                  OK
+                </button>
+                 <button 
+                  onClick={() => setTimeEditorModal(null)}
+                  className="px-6 py-2 bg-[#374151] hover:bg-[#4b5563] text-white rounded-md text-sm font-bold transition-all"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Search Header */}
+      <div className="bg-white p-4 rounded-lg border border-border flex flex-wrap items-end gap-3 shadow-sm print:hidden">
+        <div className="space-y-1">
+          <label className="text-[10px] font-bold text-secondary uppercase tracking-tight">Setor:</label>
+          <select 
+            value={selectedSetor} 
+            onChange={(e) => setSelectedSetor(e.target.value)} 
+            className="w-full bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-primary min-w-[200px]"
+          >
+            {sectors.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </div>
+        <div className="space-y-1 flex-1 min-w-[200px]">
+          <label className="text-[10px] font-bold text-secondary uppercase tracking-tight">Data de início da semana:</label>
+          <input 
+            type="date" 
+            value={selectedDate} 
+            onChange={(e) => setSelectedDate(e.target.value)} 
+            className="w-full bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-primary" 
+          />
+        </div>
+        <div className="flex gap-2">
+          <button onClick={handleGerarEscala} className="bg-blue-600 hover:bg-blue-700 text-white font-bold h-[34px] px-4 rounded-md text-xs transition-colors">Gerar Escala Semanal</button>
+          <button 
+            onClick={toggleEditMode}
+            className={cn(
+              "font-bold h-[34px] px-4 rounded-md text-xs transition-colors",
+              isEditMode ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
+            )}
+          >
+            {isEditMode ? "Salvar Escala Semanal" : "Editar Escala Semanal"}
+          </button>
+          <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold h-[34px] px-4 rounded-md text-xs transition-colors">Escalar Tarefas</button>
+          <button onClick={handlePrint} className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold h-[34px] px-4 rounded-md text-xs transition-colors flex items-center gap-2">
+            <Printer className="w-4 h-4" />
+            Imprimir
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white p-8 rounded-lg border border-border shadow-sm min-w-[1000px] print:border-none print:shadow-none print:p-0">
+        {/* Report Header */}
+        <div className="flex items-center mb-10">
+          <div className="w-32 h-32 flex items-center justify-center overflow-hidden rounded-md border border-slate-100 bg-slate-50">
+            {config.logoImg ? (
+              <img src={config.logoImg} alt="Logo" className="max-w-full max-h-full object-contain p-2" referrerPolicy="no-referrer" />
+            ) : (
+              <div className="text-[10px] font-bold text-slate-300 uppercase italic">LOGO</div>
+            )}
+          </div>
+          <div className="flex-1 text-center pr-32">
+            <h1 className="text-4xl font-black text-slate-800 tracking-tight">
+              {params.sector === 'Todos' ? 'GERAL' : params.sector} - Escala Semanal
+            </h1>
+          </div>
+        </div>
+
+        {/* Weekly Grid */}
+        <div className="grid grid-cols-7 gap-1">
+          {weekDays.map((day) => {
+            const date = addDays(startOfThisWeek, day.offset);
+            const dateKey = format(date, 'yyyy-MM-dd');
+            const isHoliday = allHolidays.some(h => isSameDay(parseISO(h.data), date));
+            const holidayName = allHolidays.find(h => isSameDay(parseISO(h.data), date))?.descricao;
+            const isSun = isSunday(date);
+
+            // Separate employees into working and off lists
+            const working: any[] = [];
+            const off: any[] = [];
+
+            displayedEmployees.forEach(e => {
+              const { isOff } = isEmployeeOff(e, date, allHolidays);
+              const override = weeklyOverrides[dateKey]?.[e.id];
+
+              if (override?.type) {
+                off.push({ ...e, overrideType: override.type, overrideTime: override.time });
+              } else if (isOff) {
+                // Not showing system off employees if they are on vacation/leave, 
+                // but based on image 3, it seems "off" manual ones go to the bottom.
+                // If they are off by system, we skip if not in edit mode?
+                // The user said: "se o funcionario estiver de ferias ou licença naõ deve aparecer na escala semanal"
+                // So I skip them entirely if they are in Vacation/Leave.
+              } else {
+                working.push({ ...e, overrideTime: override?.time });
+              }
+            });
+
+            // Re-sort working list based on actual entry time (original or overridden)
+            working.sort((a, b) => {
+              const timeA = a.overrideTime || a.horaEntrada || '00:00';
+              const timeB = b.overrideTime || b.horaEntrada || '00:00';
+              return timeA.localeCompare(timeB);
+            });
+
+            return (
+              <div 
+                key={day.label} 
+                className={cn(
+                  "min-h-[400px] rounded-lg border border-slate-100 p-4 transition-all",
+                  isSun ? "bg-red-100/50" : isHoliday ? "bg-amber-100" : "bg-slate-50/30"
+                )}
+              >
+                <div className="mb-6">
+                  <h3 className="text-sm font-black text-slate-800 leading-tight">
+                    {format(date, 'dd/MM')} ({day.label}) {isHoliday ? ' - Feriado' : ''}
+                  </h3>
+                </div>
+
+                <div className="space-y-4">
+                  {working.map(e => (
+                    <div key={e.id} className="flex items-center gap-1">
+                       {isEditMode && (
+                        <button 
+                          onClick={() => setOffTypeModal({ dateKey, employeeId: e.id })}
+                          className="w-5 h-5 rounded border border-slate-300 flex-shrink-0 hover:bg-slate-200 transition-colors mr-1"
+                        />
+                       )}
+                       <p className="text-sm font-bold text-slate-700 leading-tight truncate flex-1">
+                        {e.nome.split(' ')[0]} 
+                        {!isEditMode && ` (${e.overrideTime || e.horaEntrada})`}
+                       </p>
+                       {isEditMode && (
+                        <button 
+                          onClick={() => handleSetTime(dateKey, e.id, e.overrideTime || e.horaEntrada)}
+                          className="px-3 py-1 rounded-full text-xs font-black text-white bg-blue-600 hover:bg-blue-700 transition-all tabular-nums shadow-sm active:scale-95"
+                        >
+                          {e.overrideTime || e.horaEntrada}
+                        </button>
+                       )}
+                    </div>
+                  ))}
+
+                  {off.length > 0 && <div className="border-t border-slate-200 mt-3 pt-3" />}
+
+                  {off.map(e => (
+                    <div key={e.id} className="flex items-center gap-1">
+                       {isEditMode && (
+                        <button 
+                          onClick={() => clearOverride(dateKey, e.id)}
+                          className="w-5 h-5 rounded border border-blue-600 bg-blue-600 flex items-center justify-center flex-shrink-0 mr-1"
+                        >
+                          <span className="text-xs text-white">✓</span>
+                        </button>
+                       )}
+                       <p className="text-sm font-black text-red-600 leading-tight truncate">
+                        {e.nome.split(' ')[0]} ({e.overrideType})
+                       </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

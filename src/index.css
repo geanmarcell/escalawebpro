@@ -5,44 +5,57 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  /* Geometric Balance Palette */
-  --color-bg: #F4F6F8;
+  /* Geometric Balance Palette - Professional Blue Mode */
+  --color-bg: #F8FAFC;
   --color-surface: #FFFFFF;
-  --color-primary: #2563EB;
+  --color-primary: #1E40AF;
   --color-primary-hover: #1D4ED8;
-  --color-secondary: #64748B;
-  --color-text: #1E293B;
-  --color-code-bg: #0F172A;
-  --color-accent: #10B981;
+  --color-primary-soft: #EFF6FF;
+  --color-secondary: #475569;
+  --color-text: #0F172A;
+  --color-code-bg: #1E293B;
+  --color-accent: #2563EB;
   --color-warning: #F59E0B;
   --color-border: #E2E8F0;
   
-  --radius-lg: 8px;
-  --radius-xl: 12px;
+  --radius-lg: 10px;
+  --radius-xl: 16px;
 }
 
 @layer base {
   body {
-    @apply bg-bg text-text antialiased font-sans;
+    @apply bg-bg text-text antialiased font-sans selection:bg-primary/10 selection:text-primary;
   }
 }
 
 @layer components {
   /* Sharp, structured cards as per Geometric Balance */
   .card-geometric {
-    @apply bg-surface border border-border shadow-sm rounded-lg;
+    @apply bg-surface border border-border shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] rounded-xl;
   }
   
   .section-label {
-    @apply text-[11px] uppercase tracking-[0.1em] font-bold text-secondary mb-3;
+    @apply text-[10px] uppercase tracking-[0.2em] font-extrabold text-slate-400 mb-4 px-2;
   }
 
   .btn-primary {
-    @apply bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-md transition-all active:scale-[0.97] flex items-center gap-2 font-semibold text-sm;
+    @apply bg-primary hover:bg-primary-hover text-white px-6 py-2.5 rounded-lg transition-all active:scale-[0.98] flex items-center gap-2 font-bold text-sm shadow-sm shadow-primary/20;
   }
   
   .btn-outline {
-    @apply bg-transparent border border-border hover:bg-slate-50 text-secondary px-5 py-2.5 rounded-md transition-all active:scale-[0.97] flex items-center gap-2 font-semibold text-sm;
+    @apply bg-surface border border-border hover:border-primary/30 hover:bg-primary-soft text-secondary hover:text-primary px-6 py-2.5 rounded-lg transition-all active:scale-[0.98] flex items-center gap-2 font-bold text-sm shadow-sm;
+  }
+
+  .nav-item-base {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-bold text-sm relative overflow-hidden;
+  }
+
+  .nav-item-active {
+    @apply bg-primary text-white shadow-lg shadow-primary/25;
+  }
+
+  .nav-item-inactive {
+    @apply text-secondary hover:bg-primary-soft hover:text-primary;
   }
 
   .metric-card {
@@ -67,8 +80,8 @@
 @layer base {
   @media print {
     @page {
-      size: landscape;
-      margin: 10mm;
+      size: A4 landscape;
+      margin: 15mm;
     }
     
     body {
