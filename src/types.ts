@@ -35,9 +35,16 @@ export interface UserPermission {
   excluirFuncionarios: boolean;
 }
 
+export interface Holiday {
+  id: string;
+  data: string;
+  descricao: string;
+}
+
 export interface AppConfig {
   primeiroDia: number;
   logoImg: string | null;
   logoWidth: number;
   logoHeight: number;
+  feriados?: Holiday[];
 }

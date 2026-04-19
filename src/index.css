@@ -63,3 +63,37 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-slate-300 rounded-full hover:bg-slate-400;
 }
+
+@layer base {
+  @media print {
+    @page {
+      size: landscape;
+      margin: 10mm;
+    }
+    
+    body {
+      background: white !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* Ocultar elementos desnecessários na impressão */
+    .print\:hidden {
+      display: none !important;
+    }
+
+    /* Garantir que tabelas caibam na página */
+    table {
+      page-break-inside: auto;
+    }
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+  }
+}
