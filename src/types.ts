@@ -20,11 +20,15 @@ export interface Employee {
   tipoEscala: ScaleType | '';
   licencaInicio: string | null;
   licencaFim: string | null;
+  telefone: string;
+  email: string;
+  fotoUrl?: string;
 }
 
 export interface User {
   usuario: string;
   senha?: string;
+  fotoUrl?: string;
 }
 
 export interface UserPermission {
@@ -33,6 +37,7 @@ export interface UserPermission {
   adicionarFuncionarios: boolean;
   editarFuncionarios: boolean;
   excluirFuncionarios: boolean;
+  editarEscala: boolean;
 }
 
 export interface Holiday {

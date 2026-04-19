@@ -24,7 +24,9 @@ import {
   Cake,
   PlaneTakeoff,
   Stethoscope,
-  Printer
+  Printer,
+  MessageCircle,
+  Mail
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
@@ -264,9 +266,13 @@ export default function App() {
       adicionarUsuarios: true,
       adicionarFuncionarios: true,
       editarFuncionarios: true,
-      excluirFuncionarios: true
+      excluirFuncionarios: true,
+      editarEscala: true
     }
   ]);
+
+  // Derivada do usuário logado
+  const loggedUserObj = users.find(u => u.usuario === currentUser);
   
   useEffect(() => {
     const savedEmployees = localStorage.getItem('escala_employees');
@@ -288,31 +294,36 @@ export default function App() {
           id: 1, cracha: '001', nome: 'João Silva', funcao: 'Operador de Produção', setor: 'Operacional',
           admissao: '2023-01-10', folgaSemanal: '2023-01-01', folgaDomingo: '2023-01-05',
           turno: 'Manhã', ferias: null, diasFerias: 0, nascimento: '1990-05-15',
-          horaEntrada: '06:00', horaSaida: '14:20', tipoEscala: '6x1', licencaInicio: null, licencaFim: null
+          horaEntrada: '06:00', horaSaida: '14:20', tipoEscala: '6x1', licencaInicio: null, licencaFim: null,
+          telefone: '(11) 98888-7777', email: 'joao.silva@exemplo.com'
         },
         {
           id: 2, cracha: '002', nome: 'Maria Oliveira', funcao: 'Líder de Equipe', setor: 'Operacional',
           admissao: '2022-03-15', folgaSemanal: '2022-03-01', folgaDomingo: '2022-03-06',
           turno: 'Tarde', ferias: null, diasFerias: 0, nascimento: '1988-11-20',
-          horaEntrada: '14:20', horaSaida: '22:40', tipoEscala: '6x1', licencaInicio: null, licencaFim: null
+          horaEntrada: '14:20', horaSaida: '22:40', tipoEscala: '6x1', licencaInicio: null, licencaFim: null,
+          telefone: '(11) 97777-6666', email: 'maria.oliveira@exemplo.com'
         },
         {
           id: 3, cracha: '003', nome: 'Carlos Souza', funcao: 'Auxiliar de Limpeza', setor: 'Limpeza',
           admissao: '2024-02-01', folgaSemanal: '2024-02-05', folgaDomingo: '2024-02-11',
           turno: 'Manhã', ferias: null, diasFerias: 0, nascimento: '1995-07-30',
-          horaEntrada: '07:00', horaSaida: '15:20', tipoEscala: '5x2', licencaInicio: null, licencaFim: null
+          horaEntrada: '07:00', horaSaida: '15:20', tipoEscala: '5x2', licencaInicio: null, licencaFim: null,
+          telefone: '(11) 96666-5555', email: 'carlos.souza@exemplo.com'
         },
         {
           id: 4, cracha: '004', nome: 'Ana Costa', funcao: 'Recepcionista', setor: 'Recepção',
           admissao: '2023-10-10', folgaSemanal: '2023-10-02', folgaDomingo: '2023-10-08',
           turno: 'Manhã', ferias: null, diasFerias: 0, nascimento: '1992-04-12',
-          horaEntrada: '08:00', horaSaida: '17:00', tipoEscala: '5x2', licencaInicio: null, licencaFim: null
+          horaEntrada: '08:00', horaSaida: '17:00', tipoEscala: '5x2', licencaInicio: null, licencaFim: null,
+          telefone: '(11) 95555-4444', email: 'ana.costa@exemplo.com'
         },
         {
           id: 5, cracha: '005', nome: 'Pedro Santos', funcao: 'Agente de Portaria', setor: 'Segurança',
           admissao: '2024-01-01', folgaSemanal: '2024-01-02', folgaDomingo: '2024-01-07',
           turno: 'Noite', ferias: null, diasFerias: 0, nascimento: '1985-12-25',
-          horaEntrada: '19:00', horaSaida: '07:00', tipoEscala: '12x36', licencaInicio: null, licencaFim: null
+          horaEntrada: '19:00', horaSaida: '07:00', tipoEscala: '12x36', licencaInicio: null, licencaFim: null,
+          telefone: '(11) 94444-3333', email: 'pedro.santos@exemplo.com'
         }
       ];
       setEmployees(mockEmployees);
@@ -328,8 +339,14 @@ export default function App() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simplified login for demo purposes
-    if ((loginUser === 'Admin' && loginPass === '123456') || (loginUser === 'user' && loginPass === 'pass')) {
+    
+    // Procura o usuário na lista de usuários cadastrados
+    const foundUser = users.find(u => u.usuario === loginUser);
+    
+    // Verifica Admin (padrão se não estiver na lista ou se for o Admin padrão)
+    const isAdminDefault = loginUser === 'Admin' && loginPass === '123456';
+    
+    if (isAdminDefault || (foundUser && foundUser.senha === loginPass)) {
       setCurrentUser(loginUser);
       setIsAuthenticated(true);
       sessionStorage.setItem('usuarioLogado', loginUser);
@@ -358,8 +375,8 @@ export default function App() {
               <div className="bg-primary p-3 rounded-lg flex items-center justify-center mb-4">
                 <Calendar className="text-white w-6 h-6" />
               </div>
-              <h1 className="text-xl font-extrabold text-text tracking-tight uppercase">Code_Analyst.io</h1>
-              <p className="text-secondary text-xs mt-2 uppercase tracking-widest font-bold">Escala Management Platform</p>
+              <h1 className="text-xl font-extrabold text-text tracking-tight uppercase">ESCALA WEB FREE</h1>
+              <p className="text-secondary text-xs mt-2 uppercase tracking-widest font-bold">Plataforma de gerenciamento Escala</p>
             </div>
             
             <form onSubmit={handleLogin} className="space-y-6">
@@ -412,9 +429,8 @@ export default function App() {
               </button>
             </form>
             
-            <div className="mt-10 pt-8 border-t border-border flex justify-between items-center text-[10px] uppercase font-bold text-secondary tracking-widest">
+            <div className="mt-10 pt-8 border-t border-border flex justify-center items-center text-[10px] uppercase font-bold text-secondary tracking-widest">
               <span>Modelo v4.1</span>
-              <span>Admin: 123456</span>
             </div>
           </div>
         </motion.div>
@@ -437,9 +453,23 @@ export default function App() {
         </div>
         
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 mr-4">
-             <div className="w-2 h-2 rounded-full bg-accent animate-pulse"></div>
-             <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">Sistema Ativo</span>
+          <div className="flex items-center gap-3 mr-4 pl-4 border-l border-border">
+             <div className="text-right flex flex-col justify-center">
+                <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest leading-none">Usuário Logado</span>
+                <span className="text-xs font-bold text-slate-700">{currentUser}</span>
+             </div>
+             {loggedUserObj?.fotoUrl ? (
+               <img 
+                 src={loggedUserObj.fotoUrl} 
+                 alt="User" 
+                 className="w-10 h-10 rounded-full object-cover border-2 border-primary/20 shadow-sm"
+                 referrerPolicy="no-referrer"
+               />
+             ) : (
+               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                 <UserIcon className="w-5 h-5" />
+               </div>
+             )}
           </div>
           <button className="btn-outline py-2 px-3">
              <Bell className="w-4 h-4" />
@@ -526,9 +556,24 @@ export default function App() {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
             >
-              {activeView === 'gerenciar' && <GerenciarView employees={employees} setEmployees={setEmployees} />}
+              {activeView === 'gerenciar' && (
+                <GerenciarView 
+                  employees={employees} 
+                  setEmployees={setEmployees} 
+                  currentUser={currentUser}
+                  currentUserPerms={userPermissions.find(p => p.usuario === currentUser)}
+                />
+              )}
               {activeView === 'escala' && <EscalaMensalView employees={employees} config={config} />}
-              {activeView === 'escalaSemanal' && <EscalaSemanalView employees={employees} holidays={config.feriados} config={config} />}
+              {activeView === 'escalaSemanal' && (
+                <EscalaSemanalView 
+                  employees={employees} 
+                  holidays={config.feriados} 
+                  config={config} 
+                  currentUser={currentUser}
+                  currentUserPerms={userPermissions.find(p => p.usuario === currentUser)}
+                />
+              )}
               {activeView === 'configuracao' && (
                 <ConfiguracaoView 
                   employees={employees} 
@@ -548,6 +593,9 @@ export default function App() {
                     setUserPermissions(newPerms);
                     localStorage.setItem('escala_permissions', JSON.stringify(newPerms));
                   }}
+                  currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
+                  currentUserPerms={userPermissions.find(p => p.usuario === currentUser)}
                 />
               )}
             </motion.div>
@@ -582,13 +630,29 @@ function NavItem({ active, onClick, icon: Icon, label }: { active: boolean, onCl
 
 // Views Implementation (Simplified for brevity in initial turn)
 
-function GerenciarView({ employees, setEmployees }: { employees: Employee[], setEmployees: (e: Employee[]) => void }) {
+function GerenciarView({ 
+  employees, 
+  setEmployees, 
+  currentUser, 
+  currentUserPerms 
+}: { 
+  employees: Employee[], 
+  setEmployees: (e: Employee[]) => void, 
+  currentUser: string | null, 
+  currentUserPerms?: UserPermission 
+}) {
+  const isAdmin = currentUser === 'Admin';
+  const canAdd = isAdmin || currentUserPerms?.adicionarFuncionarios;
+  const canEdit = isAdmin || currentUserPerms?.editarFuncionarios;
+  const canDelete = isAdmin || currentUserPerms?.excluirFuncionarios;
+
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'add' | 'edit' | 'view'>('add');
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null);
+  const [contactModalEmployee, setContactModalEmployee] = useState<Employee | null>(null);
 
   const initialFormState: Omit<Employee, 'id'> = {
     cracha: '',
@@ -606,10 +670,24 @@ function GerenciarView({ employees, setEmployees }: { employees: Employee[], set
     horaSaida: '17:00',
     tipoEscala: '',
     licencaInicio: null,
-    licencaFim: null
+    licencaFim: null,
+    telefone: '',
+    email: '',
+    fotoUrl: ''
   };
 
   const [formState, setFormState] = useState(initialFormState);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormState(prev => ({ ...prev, fotoUrl: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const filtered = employees.filter(e => 
     e.nome.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -671,13 +749,15 @@ function GerenciarView({ employees, setEmployees }: { employees: Employee[], set
           <h3 className="section-label mb-1">Módulo de Ativos</h3>
           <h1 className="text-3xl font-black text-text tracking-tighter">Equipe de Trabalho</h1>
         </div>
-        <button 
-          onClick={() => handleOpenModal('add')}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 px-6 rounded-md text-xs transition-colors flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          <span>Cadastrar Novo</span>
-        </button>
+        {canAdd && (
+          <button 
+            onClick={() => handleOpenModal('add')}
+            className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 px-6 rounded-md text-xs transition-colors flex items-center gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            <span>Cadastrar Novo</span>
+          </button>
+        )}
       </div>
 
       <div className="card-geometric bg-surface p-0 overflow-hidden">
@@ -713,7 +793,15 @@ function GerenciarView({ employees, setEmployees }: { employees: Employee[], set
               {filtered.length > 0 ? filtered.map((emp) => (
                 <tr key={emp.id} className="hover:bg-blue-50/50 transition-colors">
                   <td className="px-6 py-5 text-sm font-medium text-text">{emp.cracha}</td>
-                  <td className="px-6 py-5 text-sm font-medium text-text">{emp.nome}</td>
+                  <td className="px-6 py-5 text-sm font-bold text-primary">
+                    <button 
+                      onClick={() => setContactModalEmployee(emp)}
+                      className="hover:underline text-left"
+                      title="Clique para contatos"
+                    >
+                      {emp.nome}
+                    </button>
+                  </td>
                   <td className="px-6 py-5 text-sm text-secondary font-medium">{emp.funcao}</td>
                   <td className="px-6 py-5 text-sm text-secondary font-medium">{emp.setor}</td>
                   <td className="px-6 py-5 text-sm text-secondary font-medium">
@@ -744,19 +832,30 @@ function GerenciarView({ employees, setEmployees }: { employees: Employee[], set
                   <td className="px-6 py-5 text-sm text-right">
                     <div className="flex justify-end gap-2">
                       <button 
-                        onClick={() => handleOpenModal('edit', emp)}
-                        className="bg-white border border-border p-1.5 rounded-md text-secondary hover:text-primary transition-all shadow-sm"
-                        title="Editar"
+                        onClick={() => handleOpenModal('view', emp)}
+                        className="bg-white border border-border p-1.5 rounded-md text-secondary hover:text-blue-500 transition-all shadow-sm"
+                        title="Visualizar"
                       >
-                        <Pencil className="w-3.5 h-3.5" />
+                        <Eye className="w-3.5 h-3.5" />
                       </button>
-                      <button 
-                        onClick={() => askDelete(emp.id)}
-                        className="bg-white border border-border p-1.5 rounded-md text-secondary hover:text-red-500 transition-all shadow-sm"
-                        title="Excluir"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      {canEdit && (
+                        <button 
+                          onClick={() => handleOpenModal('edit', emp)}
+                          className="bg-white border border-border p-1.5 rounded-md text-secondary hover:text-primary transition-all shadow-sm"
+                          title="Editar"
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                      {canDelete && (
+                        <button 
+                          onClick={() => askDelete(emp.id)}
+                          className="bg-white border border-border p-1.5 rounded-md text-secondary hover:text-red-500 transition-all shadow-sm"
+                          title="Excluir"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -779,6 +878,89 @@ function GerenciarView({ employees, setEmployees }: { employees: Employee[], set
           </div>
         </div>
       </div>
+
+      {/* Quick Contact Modal */}
+      <AnimatePresence>
+        {contactModalEmployee && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-text/40 backdrop-blur-sm"
+              onClick={() => setContactModalEmployee(null)}
+            />
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative bg-surface p-8 rounded-xl shadow-2xl max-w-sm w-full"
+            >
+              <div className="text-center mb-8">
+                {contactModalEmployee.fotoUrl ? (
+                  <img 
+                    src={contactModalEmployee.fotoUrl} 
+                    alt={contactModalEmployee.nome} 
+                    className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg mx-auto mb-4"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-white shadow-sm">
+                    <UserIcon className="w-8 h-8" />
+                  </div>
+                )}
+                <h2 className="text-xl font-bold text-text truncate">{contactModalEmployee.nome}</h2>
+                <p className="text-secondary text-[10px] font-extrabold uppercase tracking-widest mt-1 opacity-70">{contactModalEmployee.funcao}</p>
+              </div>
+
+              <div className="space-y-4">
+                <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest px-2">Canais Disponíveis</p>
+                
+                <a 
+                  href={`https://wa.me/${contactModalEmployee.telefone.replace(/\D/g, '')}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full flex items-center justify-between p-4 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-2xl transition-all border border-emerald-100 group shadow-sm shadow-emerald-500/5 active:scale-[0.98]"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                      <MessageCircle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-extrabold uppercase opacity-60">WhatsApp</p>
+                      <p className="text-sm font-bold tracking-tight">{contactModalEmployee.telefone || 'Não cadastrado'}</p>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 opacity-40 group-hover:translate-x-1 transition-all" />
+                </a>
+
+                <a 
+                  href={`mailto:${contactModalEmployee.email}`}
+                  className="w-full flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-2xl transition-all border border-blue-100 group shadow-sm shadow-blue-500/5 active:scale-[0.98]"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                      <Mail className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-extrabold uppercase opacity-60">E-mail</p>
+                      <p className="text-sm font-bold truncate max-w-[180px] tracking-tight">{contactModalEmployee.email || 'Não cadastrado'}</p>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 opacity-40 group-hover:translate-x-1 transition-all" />
+                </a>
+              </div>
+
+              <button 
+                onClick={() => setContactModalEmployee(null)}
+                className="w-full mt-10 py-3.5 bg-slate-100 hover:bg-slate-200 text-secondary font-bold rounded-xl text-xs transition-colors uppercase tracking-widest"
+              >
+                Retornar ao Painel
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Delete Confirmation Modal */}
       <AnimatePresence>
@@ -1029,9 +1211,56 @@ function GerenciarView({ employees, setEmployees }: { employees: Employee[], set
                       className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
                     />
                   </div>
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-text">Telefone:</label>
+                    <input 
+                      disabled={modalMode === 'view'}
+                      type="text" 
+                      value={formState.telefone || ''}
+                      onChange={(e) => setFormState({...formState, telefone: e.target.value})}
+                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                      placeholder="(00) 00000-0000"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-text">E-mail:</label>
+                    <input 
+                      disabled={modalMode === 'view'}
+                      type="email" 
+                      value={formState.email || ''}
+                      onChange={(e) => setFormState({...formState, email: e.target.value})}
+                      className="w-full border border-slate-300 rounded-md px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                      placeholder="exemplo@email.com"
+                    />
+                  </div>
+                  <div className="space-y-1 col-span-2">
+                    <label className="text-xs font-bold text-text">Foto do Funcionário:</label>
+                    <div className="flex items-center gap-4 border border-slate-300 rounded-md p-2">
+                       {formState.fotoUrl && (
+                        <img src={formState.fotoUrl} alt="Preview" className="w-16 h-16 rounded-full object-cover border-2 border-primary" referrerPolicy="no-referrer" />
+                      )}
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="file" 
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        className="text-xs text-secondary file:mr-4 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-[10px] file:font-bold file:bg-primary file:text-white hover:file:bg-primary-hover transition-all w-full"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                {modalMode !== 'view' && (
+                {modalMode === 'view' ? (
+                  <div className="flex justify-end pt-4">
+                    <button 
+                      onClick={() => setIsModalOpen(false)}
+                      className="bg-primary hover:bg-primary-hover text-white font-bold py-1.5 px-8 rounded-lg text-sm transition-colors"
+                    >
+                      Fechar
+                    </button>
+                  </div>
+                ) : (
                   <div className="flex justify-end gap-3 pt-4">
                     <button 
                       onClick={handleSave}
@@ -1221,7 +1450,22 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
   );
 }
 
-function EscalaSemanalView({ employees, holidays: customHolidays = [], config }: { employees: Employee[], holidays?: Holiday[], config: AppConfig }) {
+function EscalaSemanalView({ 
+  employees, 
+  holidays: customHolidays = [], 
+  config,
+  currentUser,
+  currentUserPerms
+}: { 
+  employees: Employee[], 
+  holidays?: Holiday[], 
+  config: AppConfig,
+  currentUser: string | null,
+  currentUserPerms?: UserPermission
+}) {
+  const isAdmin = currentUser === 'Admin';
+  const canEditEscala = isAdmin || currentUserPerms?.editarEscala;
+
   const [selectedSetor, setSelectedSetor] = useState('Todos');
   const [selectedDate, setSelectedDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [params, setParams] = useState({ sector: 'Todos', date: new Date() });
@@ -1429,16 +1673,17 @@ function EscalaSemanalView({ employees, holidays: customHolidays = [], config }:
         </div>
         <div className="flex gap-2">
           <button onClick={handleGerarEscala} className="bg-blue-600 hover:bg-blue-700 text-white font-bold h-[34px] px-4 rounded-md text-xs transition-colors">Gerar Escala Semanal</button>
-          <button 
-            onClick={toggleEditMode}
-            className={cn(
-              "font-bold h-[34px] px-4 rounded-md text-xs transition-colors",
-              isEditMode ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
-            )}
-          >
-            {isEditMode ? "Salvar Escala Semanal" : "Editar Escala Semanal"}
-          </button>
-          <button className="bg-orange-700 hover:bg-orange-800 text-white font-bold h-[34px] px-4 rounded-md text-xs transition-colors">Escalar Tarefas</button>
+          {canEditEscala && (
+            <button 
+              onClick={toggleEditMode}
+              className={cn(
+                "font-bold h-[34px] px-4 rounded-md text-xs transition-colors",
+                isEditMode ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
+              )}
+            >
+              {isEditMode ? "Salvar Escala Semanal" : "Editar Escala Semanal"}
+            </button>
+          )}
           <button onClick={handlePrint} className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold h-[34px] px-4 rounded-md text-xs transition-colors flex items-center gap-2">
             <Printer className="w-4 h-4" />
             Imprimir
@@ -1504,57 +1749,74 @@ function EscalaSemanalView({ employees, holidays: customHolidays = [], config }:
               <div 
                 key={day.label} 
                 className={cn(
-                  "min-h-[400px] rounded-lg border border-slate-100 p-4 transition-all",
-                  isSun ? "bg-red-100/50" : isHoliday ? "bg-amber-100" : "bg-slate-50/30"
+                  "min-h-[450px] rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden transition-all",
+                  isSun ? "border-red-200" : isHoliday ? "border-orange-200" : ""
                 )}
               >
-                <div className="mb-6">
-                  <h3 className="text-sm font-black text-slate-800 leading-tight">
-                    {format(date, 'dd/MM')} ({day.label}) {isHoliday ? ' - Feriado' : ''}
+                <div className={cn(
+                  "p-3 mb-4 transition-all",
+                  isSun ? "bg-red-600 text-white" : isHoliday ? "bg-orange-500 text-white" : "bg-blue-600 text-white"
+                )}>
+                  <h3 className="text-sm font-black leading-tight flex items-center justify-center gap-1">
+                    {format(date, 'dd/MM')}
+                    <span className="uppercase text-[10px] opacity-80">({day.label})</span>
+                    {isHoliday && <span className="text-[10px] ml-1 opacity-90 font-bold border-l border-white/30 pl-1 uppercase">Feriado</span>}
                   </h3>
                 </div>
 
-                <div className="space-y-4">
-                  {working.map(e => (
-                    <div key={e.id} className="flex items-center gap-1">
-                       {isEditMode && (
-                        <button 
-                          onClick={() => setOffTypeModal({ dateKey, employeeId: e.id })}
-                          className="w-5 h-5 rounded border border-slate-300 flex-shrink-0 hover:bg-slate-200 transition-colors mr-1"
-                        />
-                       )}
-                       <p className="text-sm font-bold text-slate-700 leading-tight truncate flex-1">
-                        {e.nome.split(' ')[0]} 
-                        {!isEditMode && ` (${e.overrideTime || e.horaEntrada})`}
-                       </p>
-                       {isEditMode && (
-                        <button 
-                          onClick={() => handleSetTime(dateKey, e.id, e.overrideTime || e.horaEntrada)}
-                          className="px-3 py-1 rounded-full text-xs font-black text-white bg-blue-600 hover:bg-blue-700 transition-all tabular-nums shadow-sm active:scale-95"
-                        >
-                          {e.overrideTime || e.horaEntrada}
-                        </button>
-                       )}
-                    </div>
-                  ))}
+                <div className="px-4 pb-4 space-y-4">
+                  {working.map(e => {
+                    const isBirthday = e.nascimento && format(parseISO(e.nascimento), 'dd/MM') === format(date, 'dd/MM');
+                    
+                    return (
+                      <div key={e.id} className="flex items-center gap-1 group">
+                         {isEditMode && (
+                          <button 
+                            onClick={() => setOffTypeModal({ dateKey, employeeId: e.id })}
+                            className="w-5 h-5 rounded border border-slate-300 flex-shrink-0 hover:bg-slate-200 transition-colors mr-1"
+                          />
+                         )}
+                         <div className="flex-1 min-w-0">
+                           <p className="text-sm font-bold text-slate-700 leading-tight truncate flex items-center gap-1">
+                            {isBirthday && <Cake className="w-3.5 h-3.5 text-pink-500 animate-bounce" />}
+                            {e.nome.split(' ')[0]} 
+                            {!isEditMode && <span className="text-slate-400 font-medium ml-1">({e.overrideTime || e.horaEntrada})</span>}
+                           </p>
+                         </div>
+                         {isEditMode && (
+                          <button 
+                            onClick={() => handleSetTime(dateKey, e.id, e.overrideTime || e.horaEntrada)}
+                            className="px-3 py-1 rounded-full text-xs font-black text-white bg-blue-600 hover:bg-blue-700 transition-all tabular-nums shadow-sm active:scale-95"
+                          >
+                            {e.overrideTime || e.horaEntrada}
+                          </button>
+                         )}
+                      </div>
+                    );
+                  })}
 
-                  {off.length > 0 && <div className="border-t border-slate-200 mt-3 pt-3" />}
+                  {off.length > 0 && <div className="border-t border-slate-100 mt-3 pt-3" />}
 
-                  {off.map(e => (
-                    <div key={e.id} className="flex items-center gap-1">
-                       {isEditMode && (
-                        <button 
-                          onClick={() => clearOverride(dateKey, e.id)}
-                          className="w-5 h-5 rounded border border-blue-600 bg-blue-600 flex items-center justify-center flex-shrink-0 mr-1"
-                        >
-                          <span className="text-xs text-white">✓</span>
-                        </button>
-                       )}
-                       <p className="text-sm font-black text-red-600 leading-tight truncate">
-                        {e.nome.split(' ')[0]} ({e.overrideType})
-                       </p>
-                    </div>
-                  ))}
+                  {off.map(e => {
+                    const isBirthday = e.nascimento && format(parseISO(e.nascimento), 'dd/MM') === format(date, 'dd/MM');
+                    
+                    return (
+                      <div key={e.id} className="flex items-center gap-1">
+                         {isEditMode && (
+                          <button 
+                            onClick={() => clearOverride(dateKey, e.id)}
+                            className="w-5 h-5 rounded border border-blue-600 bg-blue-600 flex items-center justify-center flex-shrink-0 mr-1"
+                          >
+                            <span className="text-xs text-white">✓</span>
+                          </button>
+                         )}
+                         <p className="text-sm font-black text-red-600 leading-tight truncate flex items-center gap-1">
+                          {isBirthday && <Cake className="w-3.5 h-3.5 text-pink-500" />}
+                          {e.nome.split(' ')[0]} ({e.overrideType})
+                         </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -1573,7 +1835,10 @@ function ConfiguracaoView({
   users, 
   setUsers, 
   userPermissions, 
-  setUserPermissions 
+  setUserPermissions,
+  currentUser,
+  setCurrentUser,
+  currentUserPerms
 }: { 
   employees: Employee[], 
   setEmployees: (e: Employee[]) => void, 
@@ -1582,13 +1847,18 @@ function ConfiguracaoView({
   users: User[], 
   setUsers: (u: User[]) => void, 
   userPermissions: UserPermission[], 
-  setUserPermissions: (p: UserPermission[]) => void 
+  setUserPermissions: (p: UserPermission[]) => void,
+  currentUser: string | null,
+  setCurrentUser: (u: string | null) => void,
+  currentUserPerms?: UserPermission
 }) {
   const [activeTab, setActiveTab] = useState('geral');
   
   // Local form states
   const [localConfig, setLocalConfig] = useState<AppConfig>(config);
-  const [newUser, setNewUser] = useState({ usuario: '', senha: '' });
+  const [newUser, setNewUser] = useState({ usuario: '', senha: '', fotoUrl: '' });
+  const [isEditingUser, setIsEditingUser] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<string | null>(null);
   const [newHoliday, setNewHoliday] = useState({ data: '', descricao: '' });
   const [changePass, setChangePass] = useState({ usuario: 'Admin', senhaAtual: '', novaSenha: '' });
 
@@ -1597,13 +1867,27 @@ function ConfiguracaoView({
     setLocalConfig(config);
   }, [config]);
 
-  const tabs = [
-    { id: 'geral', label: 'Geral' },
-    { id: 'usuarios', label: 'Usuários' },
-    { id: 'permissoes', label: 'Permissões' },
-    { id: 'feriados', label: 'Feriados' },
-    { id: 'contato', label: 'Contato' },
+  const isAdmin = currentUser === 'Admin';
+  
+  const allTabs = [
+    { id: 'geral', label: 'Geral', restricted: true },
+    { id: 'usuarios', label: 'Usuários', restricted: false },
+    { id: 'permissoes', label: 'Permissões', restricted: true },
+    { id: 'feriados', label: 'Feriados', restricted: true },
+    { id: 'contato', label: 'Contato', restricted: true },
   ];
+
+  const allowedTabs = allTabs.filter(tab => isAdmin || !tab.restricted);
+  const activeTabExists = allowedTabs.find(t => t.id === activeTab);
+  
+  useEffect(() => {
+    if (!activeTabExists && allowedTabs.length > 0) {
+      setActiveTab(allowedTabs[0].id);
+    }
+  }, [currentUser]);
+
+  const canAddUser = isAdmin || currentUserPerms?.adicionarUsuarios;
+  const filteredUsersTable = isAdmin ? users : users.filter(u => u.usuario !== 'Admin');
 
   const handleSaveAll = () => {
     // Persistência direta para garantir que funcione
@@ -1654,24 +1938,77 @@ function ConfiguracaoView({
     }
   };
 
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewUser(prev => ({ ...prev, fotoUrl: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAddUser = () => {
-    if (!newUser.usuario || !newUser.senha) return;
-    if (users.find(u => u.usuario === newUser.usuario)) return alert("Usuário já existe.");
+    if (!newUser.usuario || (!isEditingUser && !newUser.senha)) return;
     
-    const updatedUsers = [...users, { usuario: newUser.usuario, senha: newUser.senha }];
-    setUsers(updatedUsers);
+    if (isEditingUser && userToEdit) {
+      const updatedUsers = users.map(u => 
+        u.usuario === userToEdit 
+          ? { ...u, usuario: newUser.usuario, fotoUrl: newUser.fotoUrl, senha: newUser.senha || u.senha } 
+          : u
+      );
+      setUsers(updatedUsers);
+      localStorage.setItem('escala_users', JSON.stringify(updatedUsers));
+      
+      const updatedPerms = userPermissions.map(p => 
+        p.usuario === userToEdit ? { ...p, usuario: newUser.usuario } : p
+      );
+      setUserPermissions(updatedPerms);
+      localStorage.setItem('escala_permissions', JSON.stringify(updatedPerms));
+      
+      // Update session if renamed self
+      if (currentUser === userToEdit) {
+        setCurrentUser(newUser.usuario);
+        sessionStorage.setItem('usuarioLogado', newUser.usuario);
+      }
+
+      setIsEditingUser(false);
+      setUserToEdit(null);
+      alert("Usuário atualizado!");
+    } else {
+      if (users.find(u => u.usuario === newUser.usuario)) return alert("Usuário já existe.");
+      
+      const updatedUsers = [...users, { usuario: newUser.usuario, senha: newUser.senha, fotoUrl: newUser.fotoUrl }];
+      setUsers(updatedUsers);
+      localStorage.setItem('escala_users', JSON.stringify(updatedUsers));
+      
+      const updatedPerms = [...userPermissions, {
+        usuario: newUser.usuario,
+        adicionarUsuarios: false,
+        adicionarFuncionarios: false,
+        editarFuncionarios: false,
+        excluirFuncionarios: false,
+        editarEscala: false
+      }];
+      setUserPermissions(updatedPerms);
+      localStorage.setItem('escala_permissions', JSON.stringify(updatedPerms));
+      alert("Usuário adicionado!");
+    }
     
-    const updatedPerms = [...userPermissions, {
-      usuario: newUser.usuario,
-      adicionarUsuarios: false,
-      adicionarFuncionarios: false,
-      editarFuncionarios: false,
-      excluirFuncionarios: false
-    }];
-    setUserPermissions(updatedPerms);
-    
-    setNewUser({ usuario: '', senha: '' });
-    alert("Usuário adicionado!");
+    setNewUser({ usuario: '', senha: '', fotoUrl: '' });
+  };
+
+  const startEditUser = (u: User) => {
+    setIsEditingUser(true);
+    setUserToEdit(u.usuario);
+    setNewUser({ usuario: u.usuario, senha: '', fotoUrl: u.fotoUrl || '' });
+  };
+
+  const cancelEditUser = () => {
+    setIsEditingUser(false);
+    setUserToEdit(null);
+    setNewUser({ usuario: '', senha: '', fotoUrl: '' });
   };
 
   const handleRemoveUser = (usuario: string) => {
@@ -1711,18 +2048,21 @@ function ConfiguracaoView({
   };
 
   const handleChangePassword = () => {
-    const user = users.find(u => u.usuario === changePass.usuario);
+    const targetUser = isAdmin ? changePass.usuario : currentUser;
+    if (!targetUser) return;
+
+    const user = users.find(u => u.usuario === targetUser);
     if (!user) return alert("Usuário não encontrado.");
     if (user.senha !== changePass.senhaAtual) return alert("Senha atual incorreta.");
     
     const updatedUsers = users.map(u => {
-      if (u.usuario === changePass.usuario) {
+      if (u.usuario === targetUser) {
         return { ...u, senha: changePass.novaSenha };
       }
       return u;
     });
     setUsers(updatedUsers);
-    setChangePass({ usuario: 'Admin', senhaAtual: '', novaSenha: '' });
+    setChangePass({ usuario: isAdmin ? 'Admin' : (currentUser || ''), senhaAtual: '', novaSenha: '' });
     alert("Senha alterada com sucesso!");
   };
 
@@ -1733,7 +2073,7 @@ function ConfiguracaoView({
         
         {/* Tabs Header */}
         <div className="flex bg-surface border border-border p-1 rounded-md w-fit">
-          {tabs.map((tab) => (
+          {allowedTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -1839,16 +2179,35 @@ function ConfiguracaoView({
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border">
-                      {users.map(u => (
+                      {filteredUsersTable.map(u => (
                         <tr key={u.usuario}>
-                          <td className="px-6 py-4 text-xs font-bold text-text">{u.usuario}</td>
+                          <td className="px-6 py-4 flex items-center gap-3">
+                            {u.fotoUrl ? (
+                              <img src={u.fotoUrl} alt={u.usuario} className="w-8 h-8 rounded-full object-cover border border-border" referrerPolicy="no-referrer" />
+                            ) : (
+                              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
+                                <UserIcon className="w-4 h-4" />
+                              </div>
+                            )}
+                            <span className="text-xs font-bold text-text">{u.usuario}</span>
+                          </td>
                           <td className="px-6 py-4 text-center">
-                            <button 
-                              onClick={() => handleRemoveUser(u.usuario)}
-                              className="bg-red-400 hover:bg-red-500 text-white text-[10px] font-bold py-1 px-4 rounded transition-colors uppercase"
-                            >
-                              Remover
-                            </button>
+                            {canAddUser && (
+                              <div className="flex items-center justify-center gap-2">
+                                <button 
+                                  onClick={() => startEditUser(u)}
+                                  className="bg-blue-400 hover:bg-blue-500 text-white text-[10px] font-bold py-1 px-4 rounded transition-colors uppercase"
+                                >
+                                  Editar
+                                </button>
+                                <button 
+                                  onClick={() => handleRemoveUser(u.usuario)}
+                                  className="bg-red-400 hover:bg-red-500 text-white text-[10px] font-bold py-1 px-4 rounded transition-colors uppercase"
+                                >
+                                  Remover
+                                </button>
+                              </div>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -1858,32 +2217,74 @@ function ConfiguracaoView({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-border">
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Novo Usuário:</label>
-                      <input 
-                        type="text" 
-                        value={newUser.usuario}
-                        onChange={(e) => setNewUser({ ...newUser, usuario: e.target.value })}
-                        className="w-full bg-bg border border-border rounded-md px-4 py-2 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary" 
-                      />
+                {canAddUser ? (
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">
+                      {isEditingUser ? `Editando: ${userToEdit}` : 'Novo Usuário'}
+                    </h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Usuário:</label>
+                        <input 
+                          type="text" 
+                          value={newUser.usuario}
+                          onChange={(e) => setNewUser({ ...newUser, usuario: e.target.value })}
+                          className="w-full bg-bg border border-border rounded-md px-4 py-2 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">{isEditingUser ? 'Nova Senha (opcional):' : 'Nova Senha:'}</label>
+                        <input 
+                          type="password" 
+                          value={newUser.senha}
+                          onChange={(e) => setNewUser({ ...newUser, senha: e.target.value })}
+                          placeholder="••••••••" 
+                          className="w-full bg-bg border border-border rounded-md px-4 py-2 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary" 
+                        />
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Nova Senha:</label>
-                      <input 
-                        type="password" 
-                        value={newUser.senha}
-                        onChange={(e) => setNewUser({ ...newUser, senha: e.target.value })}
-                        placeholder="••••••••" 
-                        className="w-full bg-bg border border-border rounded-md px-4 py-2 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-primary" 
-                      />
+                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Foto de Perfil:</label>
+                      <div className="flex items-center gap-4">
+                        {newUser.fotoUrl && (
+                          <img src={newUser.fotoUrl} alt="Preview" className="w-12 h-12 rounded-full object-cover border border-border" referrerPolicy="no-referrer" />
+                        )}
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={handlePhotoUpload}
+                          className="text-[10px] text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-bg file:text-text hover:file:bg-border transition-all w-full border border-border p-1 rounded-md" 
+                        />
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={handleAddUser} 
+                        className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 px-8 rounded-lg text-xs transition-colors shadow-sm shadow-emerald-500/20 uppercase tracking-widest"
+                      >
+                        {isEditingUser ? 'Salvar Alterações' : 'Adicionar Usuário'}
+                      </button>
+                      {isEditingUser && (
+                        <button 
+                          onClick={cancelEditUser} 
+                          className="bg-slate-400 hover:bg-slate-500 text-white font-bold py-2.5 px-6 rounded-lg text-xs transition-colors uppercase tracking-widest"
+                        >
+                          Cancelar
+                        </button>
+                      )}
                     </div>
                   </div>
-                  <button onClick={handleAddUser} className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-6 rounded-md text-xs transition-colors">Adicionar Usuário</button>
-                </div>
+                ) : (
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Permissão Insuficiente</h4>
+                    <p className="text-xs text-secondary font-medium">Você não tem permissão para adicionar ou editar usuários.</p>
+                  </div>
+                )}
 
                 <div className="space-y-4 md:border-l md:border-border md:pl-8">
+                  <h4 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">
+                    Alterar Senha {isAdmin ? `: ${changePass.usuario}` : ''}
+                  </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Senha Atual:</label>
@@ -1924,6 +2325,7 @@ function ConfiguracaoView({
                       <th className="px-6 py-4 text-center">Adicionar Funcionários</th>
                       <th className="px-6 py-4 text-center">Editar Funcionários</th>
                       <th className="px-6 py-4 text-center">Excluir Funcionários</th>
+                      <th className="px-6 py-4 text-center">Editar Escala</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -1959,6 +2361,14 @@ function ConfiguracaoView({
                             type="checkbox" 
                             checked={p.excluirFuncionarios} 
                             onChange={() => handleTogglePermission(p.usuario, 'excluirFuncionarios')}
+                            className="w-4 h-4 accent-primary" 
+                          />
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <input 
+                            type="checkbox" 
+                            checked={p.editarEscala} 
+                            onChange={() => handleTogglePermission(p.usuario, 'editarEscala')}
                             className="w-4 h-4 accent-primary" 
                           />
                         </td>
