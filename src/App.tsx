@@ -429,7 +429,7 @@ export default function App() {
               </button>
             </form>
             
-            <div className="mt-10 pt-8 border-t border-border flex justify-center items-center text-[10px] uppercase font-bold text-secondary tracking-widest">
+            <div className="mt-10 pt-8 border-t border-border flex justify-center items-center text-xs uppercase font-bold text-secondary tracking-widest">
               <span>Modelo v4.1</span>
             </div>
           </div>
@@ -455,7 +455,7 @@ export default function App() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3 mr-4 pl-4 border-l border-border">
              <div className="text-right flex flex-col justify-center">
-                <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest leading-none">Usuário Logado</span>
+                <span className="text-xs font-extrabold text-blue-600 uppercase tracking-widest leading-none">Usuário Logado</span>
                 <span className="text-xs font-bold text-slate-700">{currentUser}</span>
              </div>
              {loggedUserObj?.fotoUrl ? (
@@ -747,7 +747,7 @@ function GerenciarView({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h3 className="section-label mb-1">Módulo de Ativos</h3>
-          <h1 className="text-3xl font-black text-text tracking-tighter">Equipe de Trabalho</h1>
+          <h1 className="text-4xl font-black text-text tracking-tighter">Equipe de Trabalho</h1>
         </div>
         {canAdd && (
           <button 
@@ -778,15 +778,15 @@ function GerenciarView({
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-primary text-white">
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest">Crachá</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest">Nome</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest">Cargo</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest">Setor</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest">Admissão</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest">Férias</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest">Status das Férias</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest">Dias Vencido</th>
-                <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-right">Ações</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest">Crachá</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest">Nome</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest">Cargo</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest">Setor</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest">Admissão</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest">Férias</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest">Status das Férias</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest">Dias Vencido</th>
+                <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border bg-[#F8FAFC]">
@@ -824,7 +824,7 @@ function GerenciarView({
                       const vac = getVacationInfo(emp);
                       return (
                         <span className={cn(
-                          "px-3 py-1 rounded-full text-[10px] font-bold uppercase",
+                          "px-3 py-1 rounded-full text-xs font-bold uppercase",
                           vac.color
                         )}>
                           {vac.status}
@@ -880,10 +880,10 @@ function GerenciarView({
         </div>
         
         <div className="bg-bg p-4 flex items-center justify-between border-t border-border">
-          <span className="text-[10px] font-bold text-secondary uppercase tracking-widest">Mostrando 1 de 1 páginas</span>
+          <span className="text-xs font-bold text-secondary uppercase tracking-widest">Mostrando 1 de 1 páginas</span>
           <div className="flex gap-2">
-            <button className="px-4 py-2 bg-blue-300 text-white rounded text-[10px] font-bold uppercase cursor-not-allowed">Anterior</button>
-            <button className="px-4 py-2 bg-blue-400 text-white rounded text-[10px] font-bold uppercase cursor-not-allowed">Próxima</button>
+            <button className="px-4 py-2 bg-blue-300 text-white rounded text-xs font-bold uppercase cursor-not-allowed">Anterior</button>
+            <button className="px-4 py-2 bg-blue-400 text-white rounded text-xs font-bold uppercase cursor-not-allowed">Próxima</button>
           </div>
         </div>
       </div>
@@ -919,11 +919,11 @@ function GerenciarView({
                   </div>
                 )}
                 <h2 className="text-xl font-bold text-text truncate">{contactModalEmployee.nome}</h2>
-                <p className="text-secondary text-[10px] font-extrabold uppercase tracking-widest mt-1 opacity-70">{contactModalEmployee.funcao}</p>
+                <p className="text-secondary text-xs font-extrabold uppercase tracking-widest mt-1 opacity-70">{contactModalEmployee.funcao}</p>
               </div>
 
               <div className="space-y-4">
-                <p className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest px-2">Canais Disponíveis</p>
+                <p className="text-xs font-extrabold text-slate-400 uppercase tracking-widest px-2">Canais Disponíveis</p>
                 
                 <a 
                   href={`https://wa.me/${(contactModalEmployee.telefone || '').replace(/\D/g, '')}`}
@@ -944,7 +944,7 @@ function GerenciarView({
                       <MessageCircle className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-extrabold uppercase opacity-60">WhatsApp</p>
+                      <p className="text-xs font-extrabold uppercase opacity-60">WhatsApp</p>
                       <p className="text-sm font-bold tracking-tight">{contactModalEmployee.telefone || 'Não cadastrado'}</p>
                     </div>
                   </div>
@@ -968,7 +968,7 @@ function GerenciarView({
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <p className="text-[10px] font-extrabold uppercase opacity-60">E-mail</p>
+                      <p className="text-xs font-extrabold uppercase opacity-60">E-mail</p>
                       <p className="text-sm font-bold truncate max-w-[180px] tracking-tight">{contactModalEmployee.email || 'Não cadastrado'}</p>
                     </div>
                   </div>
@@ -1065,10 +1065,10 @@ function GerenciarView({
 
               <div className="p-8 overflow-y-auto space-y-8 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                 <div className="space-y-6">
-                  <h3 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Informações Pessoais</h3>
+                  <h3 className="text-xs font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Informações Pessoais</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div className="space-y-1.5 text-center md:text-left md:col-span-2">
-                       <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block mb-2">Foto de Perfil:</label>
+                       <label className="text-xs font-bold text-secondary uppercase tracking-widest block mb-2">Foto de Perfil:</label>
                        <div className="flex flex-col md:flex-row items-center gap-6 p-4 bg-bg rounded-xl border border-border">
                           {formState.fotoUrl ? (
                             <img src={formState.fotoUrl} alt="Preview" className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md" referrerPolicy="no-referrer" />
@@ -1083,7 +1083,7 @@ function GerenciarView({
                                 type="file" 
                                 accept="image/*"
                                 onChange={handlePhotoUpload}
-                                className="text-[10px] text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-primary file:text-white hover:file:bg-primary/90 transition-all w-full md:w-fit"
+                                className="text-xs text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-primary file:text-white hover:file:bg-primary/90 transition-all w-full md:w-fit"
                               />
                               <p className="text-[9px] text-secondary/60">Formatos aceitos: JPG, PNG. Tamanho máx: 2MB.</p>
                             </div>
@@ -1092,7 +1092,7 @@ function GerenciarView({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Crachá:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Crachá:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="text" 
@@ -1102,7 +1102,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Nome Completo:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Nome Completo:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="text" 
@@ -1113,7 +1113,7 @@ function GerenciarView({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Função:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Função:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="text" 
@@ -1123,7 +1123,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Setor:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Setor:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="text" 
@@ -1136,10 +1136,10 @@ function GerenciarView({
                 </div>
 
                 <div className="space-y-6">
-                  <h3 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Contrato & Escala</h3>
+                  <h3 className="text-xs font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Contrato & Escala</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Data de Admissão:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Data de Admissão:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="date" 
@@ -1149,7 +1149,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Primeira Folga Semanal:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Primeira Folga Semanal:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="date" 
@@ -1160,7 +1160,7 @@ function GerenciarView({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Primeira Folga de Domingo:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Primeira Folga de Domingo:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="date" 
@@ -1170,7 +1170,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Turno:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Turno:</label>
                       <select 
                         disabled={modalMode === 'view'}
                         value={formState.turno}
@@ -1184,7 +1184,7 @@ function GerenciarView({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Data de Férias:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Data de Férias:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="date" 
@@ -1194,7 +1194,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Dias de Férias:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Dias de Férias:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="number" 
@@ -1205,7 +1205,7 @@ function GerenciarView({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Data de Nascimento:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Data de Nascimento:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="date" 
@@ -1215,7 +1215,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Tipo de Escala:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Tipo de Escala:</label>
                       <select 
                         disabled={modalMode === 'view'}
                         value={formState.tipoEscala}
@@ -1230,7 +1230,7 @@ function GerenciarView({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Horário de Entrada:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Horário de Entrada:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="time" 
@@ -1240,7 +1240,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Horário de Saída:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Horário de Saída:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="time" 
@@ -1253,10 +1253,10 @@ function GerenciarView({
                 </div>
 
                 <div className="space-y-6">
-                  <h3 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Contato & Licença</h3>
+                  <h3 className="text-xs font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Contato & Licença</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Telefone:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Telefone:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="text" 
@@ -1267,7 +1267,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">E-mail:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">E-mail:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="email" 
@@ -1279,7 +1279,7 @@ function GerenciarView({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Início da Licença:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Início da Licença:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="date" 
@@ -1289,7 +1289,7 @@ function GerenciarView({
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Término da Licença:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Término da Licença:</label>
                       <input 
                         disabled={modalMode === 'view'}
                         type="date" 
@@ -1377,17 +1377,17 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
       {/* Search Header */}
       <div className="bg-white p-4 rounded-lg border border-border flex flex-wrap items-end gap-3 shadow-sm print:hidden">
         <div className="space-y-1">
-          <label className="text-[10px] font-bold text-secondary uppercase tracking-tight">Setor:</label>
+          <label className="text-xs font-bold text-secondary uppercase tracking-tight">Setor:</label>
           <select value={selectedSetor} onChange={(e) => setSelectedSetor(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-primary">
             {sectors.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
         <div className="space-y-1">
-          <label className="text-[10px] font-bold text-secondary uppercase tracking-tight">Ano:</label>
+          <label className="text-xs font-bold text-secondary uppercase tracking-tight">Ano:</label>
           <input type="number" value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value))} className="w-24 bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-primary" />
         </div>
         <div className="space-y-1 flex-1 min-w-[150px]">
-          <label className="text-[10px] font-bold text-secondary uppercase tracking-tight">Mês:</label>
+          <label className="text-xs font-bold text-secondary uppercase tracking-tight">Mês:</label>
           <select value={selectedMonth} onChange={(e) => setSelectedMonth(parseInt(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-primary">
             {months.map((m, i) => <option key={i} value={i}>{m}</option>)}
           </select>
@@ -1399,16 +1399,16 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
       <div className="bg-white p-6 rounded-lg border border-border shadow-sm min-w-[1000px] print:border-none print:shadow-none print:p-0">
         <div className="flex flex-col items-center mb-8 relative min-h-[96px]">
           <div className="absolute left-0 top-0 h-24 w-24 flex items-center justify-center overflow-hidden rounded-full border border-slate-100 bg-slate-50 print:border-none print:bg-transparent">
-            {config.logoImg ? <img src={config.logoImg} alt="Logo" className="max-w-full max-h-full object-contain p-2" referrerPolicy="no-referrer" /> : <div className="text-[10px] font-bold text-slate-300 uppercase italic">LOGO</div>}
+            {config.logoImg ? <img src={config.logoImg} alt="Logo" className="max-w-full max-h-full object-contain p-2" referrerPolicy="no-referrer" /> : <div className="text-xs font-bold text-slate-300 uppercase italic">LOGO</div>}
           </div>
-          <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tight mt-6">{params.setor === 'Todos' ? 'GERAL' : params.setor}</h1>
-          <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-widest">{format(cycleStart, "d 'de' MMMM", { locale: ptBR })} a {format(cycleEnd, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}</p>
+          <h1 className="text-4xl font-black text-slate-800 uppercase tracking-tight mt-6">{params.setor === 'Todos' ? 'GERAL' : params.setor}</h1>
+          <p className="text-sm font-bold text-slate-500 mt-1 uppercase tracking-widest">{format(cycleStart, "d 'de' MMMM", { locale: ptBR })} a {format(cycleEnd, "d 'de' MMMM 'de' yyyy", { locale: ptBR })}</p>
         </div>
 
         <div className="overflow-hidden border border-slate-200 rounded-sm mt-8">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-slate-50 text-[10px] uppercase font-bold text-slate-700 border-b border-slate-200">
+              <tr className="bg-slate-50 text-xs uppercase font-bold text-slate-700 border-b border-slate-200">
                 <th className="p-2 border-r border-slate-200 text-center w-24">Crachá</th>
                 <th className="p-2 border-r border-slate-200 text-left w-64">Nome</th>
                 <th className="p-2 border-r border-slate-200 text-center w-32">Cargo</th>
@@ -1417,7 +1417,7 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
                   <th key={i} className={cn("p-1 border-r border-slate-100 text-center w-8", isSunday(d) && "bg-rose-50 text-red-600")}>{format(d, 'd')}</th>
                 ))}
               </tr>
-              <tr className="bg-slate-50/50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-200">
+              <tr className="bg-slate-50/50 text-[11px] uppercase font-bold text-slate-500 border-b border-slate-200">
                 <th colSpan={4} className="border-r border-slate-200"></th>
                 {daysInCycle.map((d, i) => (
                   <th key={i} className={cn("p-1 border-r border-slate-100 text-center w-8", isSunday(d) && "bg-rose-50 text-red-600")}>{format(d, 'EEEEEE', { locale: ptBR }).toUpperCase()}</th>
@@ -1426,10 +1426,10 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
             </thead>
             <tbody className="divide-y divide-slate-100">
               {displayedEmployees.map(e => (
-                <tr key={e.id} className="text-[10px] font-medium text-slate-600 group hover:bg-slate-50 transition-colors">
+                <tr key={e.id} className="text-xs font-bold text-slate-600 group hover:bg-slate-50 transition-colors">
                   <td className="p-2 border-r border-slate-200 text-center font-mono">{e.cracha}</td>
                   <td className="p-2 border-r border-slate-200 uppercase truncate max-w-[200px]">{e.nome}</td>
-                  <td className="p-2 border-r border-slate-200 text-[9px] uppercase font-bold text-slate-400 text-center">{e.funcao}</td>
+                  <td className="p-2 border-r border-slate-200 text-xs uppercase font-bold text-slate-400 text-center">{e.funcao}</td>
                   <td className="p-2 border-r border-slate-200 text-center">{e.turno}</td>
                   {daysInCycle.map((date, i) => {
                     const { isOff, isHoliday, isVacation, isLeave } = isEmployeeOff(e, date, holidays);
@@ -1467,22 +1467,22 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
               <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest border-l-4 border-amber-400 pl-3">Feriados</h3>
               <div className="space-y-1">
                 {periodHolidays.length > 0 ? periodHolidays.map(h => (
-                  <p key={h.id} className="text-[10px] text-slate-600 font-bold flex items-center">
+                  <p key={h.id} className="text-xs text-slate-600 font-bold flex items-center">
                     <span className="text-slate-400 font-mono w-24 inline-block">{format(parseISO(h.data), 'dd/MM/yyyy')}</span>
                     <span className="uppercase">{h.descricao}</span>
                   </p>
-                )) : <p className="text-[10px] text-slate-400 italic font-medium">Nenhum feriado no período selecionado.</p>}
+                )) : <p className="text-xs text-slate-400 italic font-medium">Nenhum feriado no período selecionado.</p>}
               </div>
            </div>
            <div className="space-y-4">
               <h3 className="text-xs font-black text-slate-800 uppercase tracking-widest border-l-4 border-primary pl-3">Aniversariantes</h3>
               <div className="space-y-1">
                 {birthdays.length > 0 ? birthdays.map(e => (
-                  <p key={e.id} className="text-[10px] text-slate-600 font-bold flex items-center">
+                  <p key={e.id} className="text-xs text-slate-600 font-bold flex items-center">
                     <span className="text-slate-400 font-mono w-14 inline-block">{format(parseISO(e.nascimento!), 'dd/MM')}</span>
                     <span className="uppercase truncate">{e.nome}</span>
                   </p>
-                )) : <p className="text-[10px] text-slate-400 italic font-medium">Nenhum aniversariantes.</p>}
+                )) : <p className="text-xs text-slate-400 italic font-medium">Nenhum aniversariantes.</p>}
               </div>
            </div>
         </div>
@@ -1694,7 +1694,7 @@ function EscalaSemanalView({
       {/* Search Header */}
       <div className="bg-white p-4 rounded-lg border border-border flex flex-wrap items-end gap-3 shadow-sm print:hidden">
         <div className="space-y-1">
-          <label className="text-[10px] font-bold text-secondary uppercase tracking-tight">Setor:</label>
+          <label className="text-xs font-bold text-secondary uppercase tracking-tight">Setor:</label>
           <select 
             value={selectedSetor} 
             onChange={(e) => setSelectedSetor(e.target.value)} 
@@ -1704,7 +1704,7 @@ function EscalaSemanalView({
           </select>
         </div>
         <div className="space-y-1 flex-1 min-w-[200px]">
-          <label className="text-[10px] font-bold text-secondary uppercase tracking-tight">Data de início da semana:</label>
+          <label className="text-xs font-bold text-secondary uppercase tracking-tight">Data de início da semana:</label>
           <input 
             type="date" 
             value={selectedDate} 
@@ -1739,7 +1739,7 @@ function EscalaSemanalView({
             {config.logoImg ? (
               <img src={config.logoImg} alt="Logo" className="max-w-full max-h-full object-contain p-2" referrerPolicy="no-referrer" />
             ) : (
-              <div className="text-[10px] font-bold text-slate-300 uppercase italic">LOGO</div>
+              <div className="text-xs font-bold text-slate-300 uppercase italic">LOGO</div>
             )}
           </div>
           <div className="flex-1 text-center pr-32">
@@ -1800,8 +1800,8 @@ function EscalaSemanalView({
                 )}>
                   <h3 className="text-sm font-black leading-tight flex items-center justify-center gap-1">
                     {format(date, 'dd/MM')}
-                    <span className="uppercase text-[10px] opacity-80">({day.label})</span>
-                    {isHoliday && <span className="text-[10px] ml-1 opacity-90 font-bold border-l border-white/30 pl-1 uppercase">Feriado</span>}
+                    <span className="uppercase text-xs opacity-80">({day.label})</span>
+                    {isHoliday && <span className="text-xs ml-1 opacity-90 font-bold border-l border-white/30 pl-1 uppercase">Feriado</span>}
                   </h3>
                 </div>
 
@@ -2110,16 +2110,16 @@ function ConfiguracaoView({
   return (
     <div className="max-w-5xl space-y-8">
       <div className="flex flex-col gap-4">
-        <h1 className="text-3xl font-black text-text tracking-tighter">Configuração</h1>
+        <h1 className="text-4xl font-black text-text tracking-tighter">Configuração</h1>
         
         {/* Tabs Header */}
-        <div className="flex bg-surface border border-border p-1 rounded-md w-fit">
+            <div className="flex bg-surface border border-border p-1 rounded-md w-fit">
           {allowedTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "px-6 py-2 rounded text-[10px] font-bold uppercase tracking-widest transition-all",
+                "px-6 py-2 rounded text-xs font-bold uppercase tracking-widest transition-all",
                 activeTab === tab.id 
                   ? "bg-primary text-white" 
                   : "text-secondary hover:text-text hover:bg-bg"
@@ -2137,7 +2137,7 @@ function ConfiguracaoView({
             <div className="space-y-10 animate-in fade-in slide-in-from-left-4 duration-300">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="space-y-3">
-                  <label className="text-[11px] font-bold text-secondary uppercase tracking-widest block">Primeiro dia da escala:</label>
+                  <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Primeiro dia da escala:</label>
                   <select 
                     value={localConfig.primeiroDia}
                     onChange={(e) => setLocalConfig({ ...localConfig, primeiroDia: parseInt(e.target.value) })}
@@ -2150,7 +2150,7 @@ function ConfiguracaoView({
                 </div>
 
                 <div className="space-y-3">
-                  <label className="text-[11px] font-bold text-secondary uppercase tracking-widest block">Imagem ao lado do título:</label>
+                  <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Imagem ao lado do título:</label>
                   <div className="flex flex-col gap-2">
                     <input 
                       type="file" 
@@ -2164,7 +2164,7 @@ function ConfiguracaoView({
 
                 <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
-                    <label className="text-[11px] font-bold text-secondary uppercase tracking-widest block">Largura da imagem (px):</label>
+                    <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Largura da imagem (px):</label>
                     <input 
                       type="number" 
                       value={localConfig.logoWidth}
@@ -2173,7 +2173,7 @@ function ConfiguracaoView({
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-[11px] font-bold text-secondary uppercase tracking-widest block">Altura da imagem (px):</label>
+                    <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Altura da imagem (px):</label>
                     <input 
                       type="number" 
                       value={localConfig.logoHeight}
@@ -2185,7 +2185,7 @@ function ConfiguracaoView({
               </div>
 
               <div className="space-y-4 pt-6 border-t border-border">
-                <label className="text-[11px] font-bold text-secondary uppercase tracking-widest block">Backup dos Funcionários:</label>
+                <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Backup dos Funcionários:</label>
                 <div className="flex flex-wrap items-center gap-4">
                   <button 
                     onClick={handleBackup}
@@ -2202,7 +2202,7 @@ function ConfiguracaoView({
                     />
                   </div>
                 </div>
-                <p className="text-[10px] text-secondary font-medium">Faça download do backup ou selecione um arquivo para restaurar.</p>
+                <p className="text-xs text-secondary font-medium">Faça download do backup ou selecione um arquivo para restaurar.</p>
               </div>
             </div>
           )}
@@ -2210,10 +2210,10 @@ function ConfiguracaoView({
           {activeTab === 'usuarios' && (
             <div className="space-y-10 animate-in fade-in slide-in-from-left-4 duration-300">
               <div className="space-y-4">
-                <h3 className="text-[11px] font-bold text-secondary uppercase tracking-widest">Gerenciamento de Usuários</h3>
+                <h3 className="text-xs font-bold text-secondary uppercase tracking-widest">Gerenciamento de Usuários</h3>
                 <div className="border border-border rounded-lg overflow-hidden">
                   <table className="w-full text-left">
-                    <thead className="bg-primary text-white text-[10px] font-bold uppercase tracking-widest">
+                    <thead className="bg-primary text-white text-xs font-bold uppercase tracking-widest">
                       <tr>
                         <th className="px-6 py-4">Usuário</th>
                         <th className="px-6 py-4 text-center">Ações</th>
@@ -2237,13 +2237,13 @@ function ConfiguracaoView({
                               <div className="flex items-center justify-center gap-2">
                                 <button 
                                   onClick={() => startEditUser(u)}
-                                  className="bg-blue-400 hover:bg-blue-500 text-white text-[10px] font-bold py-1 px-4 rounded transition-colors uppercase"
+                                  className="bg-blue-400 hover:bg-blue-500 text-white text-xs font-bold py-1 px-4 rounded transition-colors uppercase"
                                 >
                                   Editar
                                 </button>
                                 <button 
                                   onClick={() => handleRemoveUser(u.usuario)}
-                                  className="bg-red-400 hover:bg-red-500 text-white text-[10px] font-bold py-1 px-4 rounded transition-colors uppercase"
+                                  className="bg-red-400 hover:bg-red-500 text-white text-xs font-bold py-1 px-4 rounded transition-colors uppercase"
                                 >
                                   Remover
                                 </button>
@@ -2260,12 +2260,12 @@ function ConfiguracaoView({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-border">
                 {canAddUser ? (
                   <div className="space-y-4">
-                    <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">
+                    <h4 className="text-xs font-black text-primary uppercase tracking-[0.2em]">
                       {isEditingUser ? `Editando: ${userToEdit}` : 'Novo Usuário'}
                     </h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Usuário:</label>
+                        <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Usuário:</label>
                         <input 
                           type="text" 
                           value={newUser.usuario}
@@ -2274,7 +2274,7 @@ function ConfiguracaoView({
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">{isEditingUser ? 'Nova Senha (opcional):' : 'Nova Senha:'}</label>
+                        <label className="text-xs font-bold text-secondary uppercase tracking-widest block">{isEditingUser ? 'Nova Senha (opcional):' : 'Nova Senha:'}</label>
                         <input 
                           type="password" 
                           value={newUser.senha}
@@ -2285,7 +2285,7 @@ function ConfiguracaoView({
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Foto de Perfil:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Foto de Perfil:</label>
                       <div className="flex items-center gap-4">
                         {newUser.fotoUrl && (
                           <img src={newUser.fotoUrl} alt="Preview" className="w-12 h-12 rounded-full object-cover border border-border" referrerPolicy="no-referrer" />
@@ -2317,18 +2317,18 @@ function ConfiguracaoView({
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    <h4 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">Permissão Insuficiente</h4>
+                    <h4 className="text-xs font-black text-secondary uppercase tracking-[0.2em]">Permissão Insuficiente</h4>
                     <p className="text-xs text-secondary font-medium">Você não tem permissão para adicionar ou editar usuários.</p>
                   </div>
                 )}
 
                 <div className="space-y-4 md:border-l md:border-border md:pl-8">
-                  <h4 className="text-[10px] font-black text-secondary uppercase tracking-[0.2em]">
+                  <h4 className="text-xs font-black text-secondary uppercase tracking-[0.2em]">
                     Alterar Senha {isAdmin ? `: ${changePass.usuario}` : ''}
                   </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Senha Atual:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Senha Atual:</label>
                       <input 
                         type="password" 
                         value={changePass.senhaAtual}
@@ -2338,7 +2338,7 @@ function ConfiguracaoView({
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Nova Senha:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Nova Senha:</label>
                       <input 
                         type="password" 
                         value={changePass.novaSenha}
@@ -2356,10 +2356,10 @@ function ConfiguracaoView({
 
           {activeTab === 'permissoes' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-300">
-              <h3 className="text-[11px] font-bold text-secondary uppercase tracking-widest">Permissões de Usuários</h3>
+              <h3 className="text-xs font-bold text-secondary uppercase tracking-widest">Permissões de Usuários</h3>
               <div className="border border-border rounded-lg overflow-hidden">
                 <table className="w-full text-left">
-                  <thead className="bg-primary text-white text-[10px] font-bold uppercase tracking-widest">
+                  <thead className="bg-primary text-white text-xs font-bold uppercase tracking-widest">
                     <tr>
                       <th className="px-6 py-4">Usuário</th>
                       <th className="px-6 py-4 text-center">Adicionar Usuários</th>
@@ -2418,19 +2418,19 @@ function ConfiguracaoView({
                   </tbody>
                 </table>
               </div>
-              <p className="text-[10px] text-secondary font-medium">Marque as caixas para conceder permissões aos usuários.</p>
+              <p className="text-xs text-secondary font-medium">Marque as caixas para conceder permissões aos usuários.</p>
             </div>
           )}
 
           {activeTab === 'feriados' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-300">
-              <h3 className="text-[11px] font-bold text-secondary uppercase tracking-widest">Cadastro de Feriados</h3>
+              <h3 className="text-xs font-bold text-secondary uppercase tracking-widest">Cadastro de Feriados</h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 gap-4">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Data do Feriado:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Data do Feriado:</label>
                       <input 
                         type="date" 
                         value={newHoliday.data}
@@ -2439,7 +2439,7 @@ function ConfiguracaoView({
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-secondary uppercase tracking-widest block">Descrição:</label>
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Descrição:</label>
                       <input 
                         type="text" 
                         placeholder="Ex: Natal, Ano Novo..."
@@ -2454,7 +2454,7 @@ function ConfiguracaoView({
 
                 <div className="border border-border rounded-lg overflow-hidden">
                   <table className="w-full text-left">
-                    <thead className="bg-primary text-white text-[10px] font-bold uppercase tracking-widest">
+                    <thead className="bg-primary text-white text-xs font-bold uppercase tracking-widest">
                       <tr>
                         <th className="px-6 py-4">Data</th>
                         <th className="px-6 py-4">Feriado</th>
@@ -2485,16 +2485,16 @@ function ConfiguracaoView({
 
           {activeTab === 'contato' && (
             <div className="space-y-6 animate-in fade-in slide-in-from-left-4 duration-300">
-              <h3 className="text-[11px] font-bold text-secondary uppercase tracking-widest">Contato</h3>
+              <h3 className="text-xs font-bold text-secondary uppercase tracking-widest">Contato</h3>
               <div className="space-y-4">
-                <p className="text-xs text-text leading-relaxed font-bold">
+                <p className="text-sm text-text leading-relaxed font-bold">
                   Para dúvidas sobre o sistema ou doação para manter o projeto, entre em contato:
                 </p>
                 <div className="space-y-2">
-                  <p className="text-xs font-bold text-secondary uppercase tracking-tighter">
+                  <p className="text-sm font-bold text-secondary uppercase tracking-tighter">
                     Email: <a href="mailto:geanmcarvalho@live.com" className="text-primary hover:underline lowercase font-medium">geanmcarvalho@live.com</a>
                   </p>
-                  <p className="text-xs font-bold text-secondary uppercase tracking-tighter">
+                  <p className="text-sm font-bold text-secondary uppercase tracking-tighter">
                     WhatsApp: <a href="https://wa.me/5515981495869" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">+55 15 98149-5869</a>
                   </p>
                 </div>
