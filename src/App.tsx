@@ -291,35 +291,35 @@ export default function App() {
       // Pre-populate with mock data for demonstration
       const mockEmployees: Employee[] = [
         {
-          id: 1, cracha: '001', nome: 'João Silva', funcao: 'Operador de Produção', setor: 'Operacional',
+          id: 1, cracha: '001', nome: 'João Silva', cpf: '', endereco: '', funcao: 'Operador de Produção', setor: 'Operacional',
           admissao: '2023-01-10', folgaSemanal: '2023-01-01', folgaDomingo: '2023-01-05',
           turno: 'Manhã', ferias: null, diasFerias: 0, nascimento: '1990-05-15',
           horaEntrada: '06:00', horaSaida: '14:20', tipoEscala: '6x1', licencaInicio: null, licencaFim: null,
           telefone: '(11) 98888-7777', email: 'joao.silva@exemplo.com'
         },
         {
-          id: 2, cracha: '002', nome: 'Maria Oliveira', funcao: 'Líder de Equipe', setor: 'Operacional',
+          id: 2, cracha: '002', nome: 'Maria Oliveira', cpf: '', endereco: '', funcao: 'Líder de Equipe', setor: 'Operacional',
           admissao: '2022-03-15', folgaSemanal: '2022-03-01', folgaDomingo: '2022-03-06',
           turno: 'Tarde', ferias: null, diasFerias: 0, nascimento: '1988-11-20',
           horaEntrada: '14:20', horaSaida: '22:40', tipoEscala: '6x1', licencaInicio: null, licencaFim: null,
           telefone: '(11) 97777-6666', email: 'maria.oliveira@exemplo.com'
         },
         {
-          id: 3, cracha: '003', nome: 'Carlos Souza', funcao: 'Auxiliar de Limpeza', setor: 'Limpeza',
+          id: 3, cracha: '003', nome: 'Carlos Souza', cpf: '', endereco: '', funcao: 'Auxiliar de Limpeza', setor: 'Limpeza',
           admissao: '2024-02-01', folgaSemanal: '2024-02-05', folgaDomingo: '2024-02-11',
           turno: 'Manhã', ferias: null, diasFerias: 0, nascimento: '1995-07-30',
           horaEntrada: '07:00', horaSaida: '15:20', tipoEscala: '5x2', licencaInicio: null, licencaFim: null,
           telefone: '(11) 96666-5555', email: 'carlos.souza@exemplo.com'
         },
         {
-          id: 4, cracha: '004', nome: 'Ana Costa', funcao: 'Recepcionista', setor: 'Recepção',
+          id: 4, cracha: '004', nome: 'Ana Costa', cpf: '', endereco: '', funcao: 'Recepcionista', setor: 'Recepção',
           admissao: '2023-10-10', folgaSemanal: '2023-10-02', folgaDomingo: '2023-10-08',
           turno: 'Manhã', ferias: null, diasFerias: 0, nascimento: '1992-04-12',
           horaEntrada: '08:00', horaSaida: '17:00', tipoEscala: '5x2', licencaInicio: null, licencaFim: null,
           telefone: '(11) 95555-4444', email: 'ana.costa@exemplo.com'
         },
         {
-          id: 5, cracha: '005', nome: 'Pedro Santos', funcao: 'Agente de Portaria', setor: 'Segurança',
+          id: 5, cracha: '005', nome: 'Pedro Santos', cpf: '', endereco: '', funcao: 'Agente de Portaria', setor: 'Segurança',
           admissao: '2024-01-01', folgaSemanal: '2024-01-02', folgaDomingo: '2024-01-07',
           turno: 'Noite', ferias: null, diasFerias: 0, nascimento: '1985-12-25',
           horaEntrada: '19:00', horaSaida: '07:00', tipoEscala: '12x36', licencaInicio: null, licencaFim: null,
@@ -364,19 +364,31 @@ export default function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-code-bg flex items-center justify-center p-4 font-sans">
+      <div 
+        className="min-h-screen flex items-center justify-center p-4 font-sans relative overflow-hidden bg-slate-900"
+        style={{
+          backgroundImage: `url('https://images.unsplash.com/photo-1497366752299-4d019f30c6d5?q=80&w=2069&auto=format&fit=crop')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        {/* Overlay for depth and clarity */}
+        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]"></div>
+
         <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="w-full max-w-md"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-lg relative z-10"
         >
-          <div className="bg-surface p-10 rounded-xl shadow-2xl border border-border/10">
-            <div className="flex flex-col items-center mb-10">
-              <div className="bg-primary p-3 rounded-lg flex items-center justify-center mb-4">
-                <Calendar className="text-white w-6 h-6" />
+          <div className="bg-white/95 backdrop-blur-xl p-10 md:p-14 rounded-[2.5rem] shadow-[0_30px_100px_rgba(0,0,0,0.6)] border border-white/40">
+            <div className="flex flex-col items-center mb-12">
+              <div className="bg-primary/10 p-5 rounded-3xl flex items-center justify-center mb-6">
+                <Calendar className="text-primary w-10 h-10" />
               </div>
-              <h1 className="text-xl font-extrabold text-text tracking-tight uppercase">ESCALA WEB FREE</h1>
-              <p className="text-secondary text-xs mt-2 uppercase tracking-widest font-bold">Plataforma de gerenciamento Escala</p>
+              <h1 className="text-3xl font-black text-slate-800 tracking-tight uppercase">ESCALA WEB FREE</h1>
+              <p className="text-slate-500 text-xs mt-3 uppercase tracking-[0.3em] font-bold opacity-80">Plataforma de gerenciamento Escala</p>
             </div>
             
             <form onSubmit={handleLogin} className="space-y-6">
@@ -657,6 +669,8 @@ function GerenciarView({
   const initialFormState: Omit<Employee, 'id'> = {
     cracha: '',
     nome: '',
+    cpf: '',
+    endereco: '',
     funcao: '',
     setor: '',
     admissao: '',
@@ -693,7 +707,8 @@ function GerenciarView({
     e.nome.toLowerCase().includes(searchTerm.toLowerCase()) || 
     e.cracha.toLowerCase().includes(searchTerm.toLowerCase()) ||
     e.setor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    e.funcao.toLowerCase().includes(searchTerm.toLowerCase())
+    e.funcao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (e.cpf && e.cpf.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleOpenModal = (mode: 'add' | 'edit' | 'view', employee?: Employee) => {
@@ -1085,7 +1100,7 @@ function GerenciarView({
                                 onChange={handlePhotoUpload}
                                 className="text-xs text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-primary file:text-white hover:file:bg-primary/90 transition-all w-full md:w-fit"
                               />
-                              <p className="text-[9px] text-secondary/60">Formatos aceitos: JPG, PNG. Tamanho máx: 2MB.</p>
+                              <p className="text-xs text-secondary/60">Formatos aceitos: JPG, PNG. Tamanho máx: 2MB.</p>
                             </div>
                           )}
                        </div>
@@ -1109,6 +1124,53 @@ function GerenciarView({
                         value={formState.nome}
                         onChange={(e) => setFormState({...formState, nome: e.target.value})}
                         className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-60"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">CPF:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="text" 
+                        value={formState.cpf}
+                        onChange={(e) => setFormState({...formState, cpf: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-60"
+                        placeholder="000.000.000-00"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5 md:col-span-2">
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Endereço:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="text" 
+                        value={formState.endereco}
+                        onChange={(e) => setFormState({...formState, endereco: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-60"
+                        placeholder="Rua, Número, Bairro, Cidade - UF"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Telefone:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="text" 
+                        value={formState.telefone || ''}
+                        onChange={(e) => setFormState({...formState, telefone: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        placeholder="(00) 00000-0000"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">E-mail:</label>
+                      <input 
+                        disabled={modalMode === 'view'}
+                        type="email" 
+                        value={formState.email || ''}
+                        onChange={(e) => setFormState({...formState, email: e.target.value})}
+                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        placeholder="exemplo@email.com"
                       />
                     </div>
 
@@ -1253,31 +1315,8 @@ function GerenciarView({
                 </div>
 
                 <div className="space-y-6">
-                  <h3 className="text-xs font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Contato & Licença</h3>
+                  <h3 className="text-xs font-black text-secondary uppercase tracking-[0.2em] border-b border-border pb-2">Licença</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Telefone:</label>
-                      <input 
-                        disabled={modalMode === 'view'}
-                        type="text" 
-                        value={formState.telefone || ''}
-                        onChange={(e) => setFormState({...formState, telefone: e.target.value})}
-                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                        placeholder="(00) 00000-0000"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-secondary uppercase tracking-widest block">E-mail:</label>
-                      <input 
-                        disabled={modalMode === 'view'}
-                        type="email" 
-                        value={formState.email || ''}
-                        onChange={(e) => setFormState({...formState, email: e.target.value})}
-                        className="w-full bg-bg border border-border rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                        placeholder="exemplo@email.com"
-                      />
-                    </div>
-
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-secondary uppercase tracking-widest block">Início da Licença:</label>
                       <input 
@@ -1417,7 +1456,7 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
                   <th key={i} className={cn("p-1 border-r border-slate-100 text-center w-8", isSunday(d) && "bg-rose-50 text-red-600")}>{format(d, 'd')}</th>
                 ))}
               </tr>
-              <tr className="bg-slate-50/50 text-[11px] uppercase font-bold text-slate-500 border-b border-slate-200">
+              <tr className="bg-slate-50/50 text-xs uppercase font-bold text-slate-500 border-b border-slate-200">
                 <th colSpan={4} className="border-r border-slate-200"></th>
                 {daysInCycle.map((d, i) => (
                   <th key={i} className={cn("p-1 border-r border-slate-100 text-center w-8", isSunday(d) && "bg-rose-50 text-red-600")}>{format(d, 'EEEEEE', { locale: ptBR }).toUpperCase()}</th>
@@ -1444,12 +1483,12 @@ function EscalaMensalView({ employees, config }: { employees: Employee[], config
                       )}>
                         <div className="w-full h-full flex items-center justify-center">
                           {isLeave ? (
-                            <div className="w-full h-full text-white font-black flex items-center justify-center text-[9px]">L</div>
+                            <div className="w-full h-full text-white font-black flex items-center justify-center text-[11px]">L</div>
                           ) : isVacation ? (
                             <div className="w-full h-full bg-slate-400"></div>
                           ) : isOff ? (
                             <div className="p-0.5 w-full h-full">
-                              <div className="w-full h-full bg-emerald-500 text-white font-black flex items-center justify-center rounded-sm text-[9px]">F</div>
+                              <div className="w-full h-full bg-emerald-500 text-white font-black flex items-center justify-center rounded-sm text-[11px]">F</div>
                             </div>
                           ) : null}
                         </div>
@@ -2156,9 +2195,9 @@ function ConfiguracaoView({
                       type="file" 
                       accept="image/*"
                       onChange={handleLogoUpload}
-                      className="text-xs text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-bg file:text-text hover:file:bg-border transition-all w-full border border-border p-1 rounded-md" 
+                      className="text-xs text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-bg file:text-text hover:file:bg-border transition-all w-full border border-border p-1 rounded-md" 
                     />
-                    <p className="text-[9px] text-secondary font-medium">Escolha uma imagem para aparecer na barra lateral.</p>
+                    <p className="text-xs text-secondary font-medium">Escolha uma imagem para aparecer na barra lateral.</p>
                   </div>
                 </div>
 
@@ -2198,7 +2237,7 @@ function ConfiguracaoView({
                       type="file" 
                       accept=".json"
                       onChange={handleRestore}
-                      className="text-xs text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-bg file:text-text hover:file:bg-border transition-all w-full border border-border p-1 rounded-md" 
+                      className="text-xs text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-bg file:text-text hover:file:bg-border transition-all w-full border border-border p-1 rounded-md" 
                     />
                   </div>
                 </div>
@@ -2294,7 +2333,7 @@ function ConfiguracaoView({
                           type="file" 
                           accept="image/*"
                           onChange={handlePhotoUpload}
-                          className="text-[10px] text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-[10px] file:font-bold file:bg-bg file:text-text hover:file:bg-border transition-all w-full border border-border p-1 rounded-md" 
+                          className="text-xs text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-bg file:text-text hover:file:bg-border transition-all w-full border border-border p-1 rounded-md" 
                         />
                       </div>
                     </div>

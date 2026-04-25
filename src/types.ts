@@ -6,6 +6,8 @@ export interface Employee {
   id: number;
   cracha: string;
   nome: string;
+  cpf: string;
+  endereco: string;
   funcao: string;
   setor: string;
   admissao: string;
