@@ -26,7 +26,9 @@ import {
   Stethoscope,
   Printer,
   MessageCircle,
-  Mail
+  Mail,
+  Skull,
+  Star
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './lib/utils';
@@ -113,12 +115,22 @@ const formatDisplayDate = (dateStr: string | null) => {
   return `${day}/${month}/${year}`;
 };
 
-function getVacationInfo(employee: Employee) {
+function getEmployeeStatus(employee: Employee) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // 1. Check for Active License (Afastado)
+  if (employee.licencaInicio && employee.licencaFim) {
+    const start = parseLocal(employee.licencaInicio);
+    const end = parseLocal(employee.licencaFim);
+    
+    if (today >= start && today <= end) {
+      return { status: 'Afastado', diasVencido: 0, color: 'bg-purple-100 text-purple-800 border border-purple-200' };
+    }
+  }
+
   if (!employee.admissao) {
-    return { status: 'Em dia', diasVencido: 0, color: 'bg-emerald-100 text-emerald-800' };
+    return { status: 'Em dia', diasVencido: 0, color: 'bg-emerald-100 text-emerald-800 border border-emerald-200' };
   }
 
   const admissionDate = parseLocal(employee.admissao);
@@ -127,23 +139,17 @@ function getVacationInfo(employee: Employee) {
     lastVacationDate = parseLocal(employee.ferias);
   }
 
-  // "Agendada" if the date is in the future
+  // 2. Check for Scheduled Vacation (Agendada)
   if (lastVacationDate && lastVacationDate >= today) {
     return { status: 'Agendada', diasVencido: 0, color: 'bg-amber-100 text-amber-800 border border-amber-200' };
   }
 
-  // Overdue logic: In Brazil, you earn 30 days after 12 months. 
-  // You have another 12 months to take them. If not taken by then, it's overdue.
-  // The user says "com base na data de entrada e da ultima ferias tirada".
-  
-  // Reference for the last completed earning period
+  // 3. Check for Overdue Vacation (Vencida)
   const referenceDate = lastVacationDate && lastVacationDate < today 
     ? lastVacationDate 
     : admissionDate;
 
-  // Deadline is usually admission + (cycles + 1) * 12 months.
-  // Let's use 12 months from the last event as the "limit" for this simplified system.
-  const deadlineDate = addMonths(referenceDate, 12);
+  const deadlineDate = addMonths(referenceDate, 11); // Brazilian rule: take 1st before 2nd cycle ends
   
   if (today > deadlineDate) {
     const overdueDays = differenceInDays(today, deadlineDate);
@@ -836,21 +842,21 @@ function GerenciarView({
                   </td>
                   <td className="px-6 py-5 text-sm">
                     {(() => {
-                      const vac = getVacationInfo(emp);
+                      const statusInfo = getEmployeeStatus(emp);
                       return (
                         <span className={cn(
-                          "px-3 py-1 rounded-full text-xs font-bold uppercase",
-                          vac.color
+                          "px-3 py-1 rounded-full text-xs font-bold uppercase whitespace-nowrap",
+                          statusInfo.color
                         )}>
-                          {vac.status}
+                          {statusInfo.status}
                         </span>
                       );
                     })()}
                   </td>
                   <td className="px-6 py-5 text-sm text-secondary font-bold">
                     {(() => {
-                      const vac = getVacationInfo(emp);
-                      return vac.diasVencido > 0 ? `${vac.diasVencido} dias` : '-';
+                      const statusInfo = getEmployeeStatus(emp);
+                      return statusInfo.diasVencido > 0 ? `${statusInfo.diasVencido} dias` : '-';
                     })()}
                   </td>
                   <td className="px-6 py-5 text-sm text-right">
@@ -2536,6 +2542,8 @@ function ConfiguracaoView({
                   <p className="text-sm font-bold text-secondary uppercase tracking-tighter">
                     WhatsApp: <a href="https://wa.me/5515981495869" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">+55 15 98149-5869</a>
                   </p>
+                  <div className="flex justify-center pt-8">
+                  </div>
                 </div>
               </div>
             </div>
