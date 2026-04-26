@@ -551,7 +551,7 @@ export default function App() {
           </div>
 
           <div className="mt-auto pt-8 border-t border-border flex justify-center">
-             <p className="text-sm font-bold text-secondary uppercase tracking-tight text-center leading-tight">
+             <p className="text-[8px] font-bold text-secondary uppercase tracking-tight text-center leading-tight">
                Criado por Gean Marcell<br/>
                em 05/2025
              </p>
